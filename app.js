@@ -20,7 +20,7 @@ const startServer = () => {
     try {
         connectDb(process.env.CONNECTION_URL);
         app.listen(port, () => {
-            console.log(`Server runnin on ${port}`);
+            console.log(`Server running on ${port}`);
         })
 
     } catch (error) {
