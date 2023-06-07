@@ -11,10 +11,10 @@ app.use(express.json());
 app.use("/api", register_routes);
 
 
-app.get("/", (req, res) => {
-    res.send("<h1>Kritisha Monkey</h1>");
+// app.get("/", (req, res) => {
+//     res.send("<h1>Kritisha Monkey</h1>");
 
-})
+// })
 
 const startServer = () => {
     try {
