@@ -38,7 +38,5 @@ const registerSchema = new mongoose.Schema({
 
 
 })
-console.log("this is models");
-// console.log(registerSchema);
 
 module.exports = mongoose.model("Users", registerSchema);

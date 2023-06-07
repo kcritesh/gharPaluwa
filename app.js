@@ -11,16 +11,16 @@ app.use(express.json());
 app.use("/api", register_routes);
 
 
-app.get("/", (req, res) => {
-    res.send("<h1>Kritisha Monkey</h1>");
+// app.get("/", (req, res) => {
+//     res.send("<h1>Kritisha Monkey</h1>");
 
-})
+// })
 
 const startServer = () => {
     try {
         connectDb(process.env.CONNECTION_URL);
         app.listen(port, () => {
-            console.log(`Server is running in port ${port}`);
+            console.log(`Server running on ${port}`);
         })
 
     } catch (error) {
