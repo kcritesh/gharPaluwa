@@ -10,11 +10,19 @@ app.use(express.json());
 
 app.use("/api", register_routes);
 
+const posts=[
+{
+    username:"kritisha",
+    role:"buyer"
+},{
+    username: "ritesh",
+    role:"seller"
+}
+]
 
-// app.get("/", (req, res) => {
-//     res.send("<h1>Kritisha Monkey</h1>");
-
-// })
+app.get("/posts", (req, res) => {
+    res.json(posts);
+})
 
 const startServer = () => {
     try {

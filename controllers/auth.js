@@ -1,10 +1,11 @@
 const Users = require("../models/registration.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+require('dotenv');
 
 const register = async (req, res) => {
 
-  const { firstName, lastName, email, address, password, confirmPassword, roles } = req.body;
+  const { firstName, lastName, email, address, username, password, confirmPassword, roles } = req.body;
 
   // Check if password and confirm password match
   if (password !== confirmPassword) {
@@ -26,6 +27,7 @@ const register = async (req, res) => {
       firstName,
       lastName,
       email,
+      username,
       address,
       password: hashedPassword,
       roles
@@ -40,6 +42,7 @@ const register = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
 // for login
 
 const login = async (req, res) => {
@@ -59,11 +62,10 @@ const login = async (req, res) => {
       return res.status(401).json({ message: 'Password doesnot match' });
     }
 
-    //  jwt.sign({ userId: Users.id}, "thisisagharpaluwaproject", { expiresIn: "300s " },(err,token)=>{
-    //   res.json({
-    //     token
-    //   })
-    //  });
+    const username = req.body.username;
+    const user1 = { name: username }
+    const accessToken = jwt.sign(user1, process.env.ACCESS_TOKEN_SECRET);
+    res.json({ accessToken: accessToken });
 
     // Login successful
     return res.status(200).json({ message: 'Login successful' });
