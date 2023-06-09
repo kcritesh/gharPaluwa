@@ -62,6 +62,7 @@ const login = async (req, res) => {
       return res.status(401).json({ message: 'Password doesnot match' });
     }
 
+    //jsonWebToken
     const username = req.body.username;
     const user1 = { name: username }
     const accessToken = jwt.sign(user1, process.env.ACCESS_TOKEN_SECRET);
