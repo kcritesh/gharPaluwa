@@ -10,14 +10,17 @@ app.use(express.json());
 
 app.use("/api", register_routes);
 
-const posts=[
-{
-    username:"kritisha",
-    role:"buyer"
-},{
-    username: "ritesh",
-    role:"seller"
-}
+const posts = [
+    {
+        username: "kritisha",
+        role: "buyer"
+    }, {
+        username: "ritesh",
+        role: "seller"
+    }, {
+        username: "sayara",
+        role: "buyer"
+    }
 ]
 
 app.get("/posts", (req, res) => {
