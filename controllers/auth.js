@@ -3,8 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 require('dotenv');
 
-const register = async (req, res) => {
-
+const register = async (req, res) => { 
   const { firstName, lastName, email, address, username, password, confirmPassword, roles } = req.body;
 
   // Check if password and confirm password match
