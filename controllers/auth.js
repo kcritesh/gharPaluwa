@@ -62,13 +62,14 @@ const login = async (req, res) => {
     }
 
     //jsonWebToken
-    const username = req.body.username;
+    const username = user.username;
     const User = { name: username }
+    console.log({username, User});
     const accessToken = jwt.sign(User, process.env.ACCESS_TOKEN_SECRET);
-    res.json({ accessToken: accessToken });
+    // res.json({ accessToken: accessToken });
 
     // Login successful
-    return res.status(200).json({ message: 'Login successful' });
+    return res.status(200).json({ accessToken});
   }
 
   catch (error) {
