@@ -1,7 +1,14 @@
+<<<<<<< HEAD:controllers/auth/auth.js
 import Users from "../models/registration.js";
 import { hash, compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import 'dotenv';
+=======
+const Users = require("../models/registration.js");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const dotenv = require('dotenv');
+>>>>>>> a78dfab939b6be568cf522e93648df3189f94530:controllers/auth.js
 
 const register = async (req, res) => {
   const { firstName, lastName, email, address, username, password, confirmPassword, roles } = req.body;
