@@ -1,9 +1,9 @@
 //SCHEMAS
 
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 const validRoles = ["seller", "buyer"];
 
-const registerSchema = new mongoose.Schema({
+const registerSchema = new Schema({
 
     firstName: {
         type: String,
@@ -32,7 +32,7 @@ const registerSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    
+
     password: {
         type: String,
         required: true,
@@ -46,4 +46,4 @@ const registerSchema = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model("Users", registerSchema);
+export default model("Users", registerSchema);

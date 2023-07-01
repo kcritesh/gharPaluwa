@@ -1,9 +1,9 @@
-const Users = require("../models/registration.js");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-require('dotenv');
+import Users from "../models/registration.js";
+import { hash, compare } from "bcrypt";
+import { sign } from "jsonwebtoken";
+import 'dotenv';
 
-const register = async (req, res) => { 
+const register = async (req, res) => {
   const { firstName, lastName, email, address, username, password, confirmPassword, roles } = req.body;
 
   // Check if password and confirm password match
@@ -19,7 +19,7 @@ const register = async (req, res) => {
     }
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hash(password, 10);
 
     // Create a new user
     const newUser = new Users({
@@ -55,7 +55,7 @@ const login = async (req, res) => {
     }
 
     // Compare the provided password with the stored hashed password
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await compare(password, user.password);
 
     if (!passwordMatch) {
       return res.status(401).json({ message: 'Password doesnot match' });
@@ -64,12 +64,12 @@ const login = async (req, res) => {
     //jsonWebToken
     const username = user.username;
     const User = { name: username }
-    console.log({username, User});
-    const accessToken = jwt.sign(User, process.env.ACCESS_TOKEN_SECRET);
-    // res.json({ accessToken: accessToken });
+    console.log({ username, User });
+    const accessToken = sign(User, process.env.ACCESS_TOKEN_SECRET);
+  
 
     // Login successful
-    return res.status(200).json({ accessToken});
+    return res.status(200).json({ accessToken });
   }
 
   catch (error) {
@@ -79,7 +79,7 @@ const login = async (req, res) => {
 }
 
 
-module.exports = {
+export {
   register,
   login
 }
