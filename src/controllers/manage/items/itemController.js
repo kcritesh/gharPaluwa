@@ -1,6 +1,3 @@
-import mongoose from "mongoose";
-import { authenticateToken } from "../../../middleware/index.js";
-
 const items = [
   {
     username: "kritisha",
@@ -8,7 +5,7 @@ const items = [
     role: "buyer",
   },
   {
-    username: "testu",
+    username: "ritesh59",
     nickname: "tester",
     role: "seller",
   },
