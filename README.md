@@ -8,6 +8,13 @@ Gharpaluwa Market Place is a web application that serves as an online marketplac
 💼 Convenient platform for buyers and sellers
 🔒 Secure transactions and payment processing
 
+## Requirements
+
+To run the Gharpaluwa Market Place application locally, you need to have the following:
+
+- MongoDB: Make sure you have MongoDB installed and running on your machine.
+- Node.js: Install Node.js to execute the JavaScript code on the server.
+
 ## Installation
 
 To install the required packages, run the following command in the terminal:

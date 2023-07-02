@@ -2,9 +2,9 @@ import express from "express";
 const router = express.Router();
 
 // Import the relevant controllers
-import { getItem } from "../../controllers/index.js";
+import { createProduct } from "../../controllers/products/productController.js";
 
 // Define the routes
-router.get("/", getItem);
+router.post("/", createProduct);
 
 export default router;
