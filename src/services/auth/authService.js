@@ -55,8 +55,7 @@ export async function loginUser(email, password) {
       throw new Error("Password doesnot match");
     }
     //jsonWebToken
-    const username = user.username;
-    const User = { name: username };
+    const User = { username: user.username, userId: user._id };
     const accessToken = jwt.sign(User, process.env.ACCESS_TOKEN_SECRET);
     // Login successful
     return accessToken;

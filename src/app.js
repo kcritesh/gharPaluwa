@@ -2,13 +2,15 @@ import express, { json } from "express";
 import connectDb from "./database/index.js";
 import * as dotenv from "dotenv";
 dotenv.config();
-import jwt from "jsonwebtoken";
+
 import register_routes from "./routes/index.js";
 
 const app = express();
 const port = 9000;
 
 app.use(json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use("/api", register_routes);
 
 const startServer = () => {
