@@ -1,10 +1,21 @@
-const Users = require("../models/registration.js");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const dotenv = require('dotenv');
+import Users from "../../models/User.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-const register = async (req, res) => { 
-  const { firstName, lastName, email, address, username, password, confirmPassword, roles } = req.body;
+const { hash, compare } = bcrypt;
+const { sign } = jwt;
+
+const register = async (req, res) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    address,
+    username,
+    password,
+    confirmPassword,
+    roles,
+  } = req.body;
 
   // Check if password and confirm password match
   if (password !== confirmPassword) {
@@ -19,7 +30,7 @@ const register = async (req, res) => {
     }
 
     // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hash(password, 10);
 
     // Create a new user
     const newUser = new Users({
@@ -29,7 +40,7 @@ const register = async (req, res) => {
       username,
       address,
       password: hashedPassword,
-      roles
+      roles,
     });
 
     // Save the user to the database
@@ -51,36 +62,28 @@ const login = async (req, res) => {
     // Check if the user exists in the database
     const user = await Users.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'User doesnot exist' });
+      return res.status(401).json({ message: "User doesnot exist" });
     }
 
     // Compare the provided password with the stored hashed password
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await compare(password, user.password);
 
     if (!passwordMatch) {
-      return res.status(401).json({ message: 'Password doesnot match' });
+      return res.status(401).json({ message: "Password doesnot match" });
     }
 
     //jsonWebToken
     const username = user.username;
-    const User = { name: username }
-    console.log({username, User});
-    const accessToken = jwt.sign(User, process.env.ACCESS_TOKEN_SECRET);
-    // res.json({ accessToken: accessToken });
+    const User = { name: username };
+    console.log({ username, User });
+    const accessToken = sign(User, process.env.ACCESS_TOKEN_SECRET);
 
     // Login successful
-    return res.status(200).json({ accessToken});
-  }
-
-  catch (error) {
+    return res.status(200).json({ accessToken });
+  } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: "Internal server error" });
   }
-}
+};
 
-
-module.exports = {
-  register,
-  login
-}
-
+export { register, login };
