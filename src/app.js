@@ -3,7 +3,8 @@ import connectDb from "./database/index.js";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import register_routes from "./routes/index.js";
+// Importing the routes
+import rootRoutes from "./routes/index.js";
 
 const app = express();
 const port = 9000;
@@ -11,7 +12,7 @@ const port = 9000;
 app.use(json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api", register_routes);
+app.use("/api", rootRoutes);
 
 const startServer = () => {
   try {
