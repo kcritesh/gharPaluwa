@@ -2,7 +2,7 @@ import * as ProductService from "../../services/products/productService.js";
 
 export async function createProduct(req, res) {
   const { name, price, description, imageUrl } = req.body;
-  const { username, userId } = req.User; // Assuming you have implemented authentication middleware to attach user information to the request
+  const { username, userId } = req.User; // from the authenticateToken middleware
   try {
     const product = await ProductService.createProduct(
       name,
