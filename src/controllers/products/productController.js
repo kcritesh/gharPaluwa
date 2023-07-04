@@ -37,10 +37,19 @@ export async function deleteProduct(req, res) {
   }
 }
 
-// export async function updateProduct(req, res) {
-//   try{
-//     const { id } = req.params;
-//     const { name, price, description } = req.body;
-//     const product = await ProductService.updateProduct(id, name, price, description, req.file.path);
-//   }
-// }
+export async function updateProduct(req, res) {
+  try {
+    const { id } = req.params;
+    const { name, price, description } = req.body;
+    const product = await ProductService.updateProduct(
+      id,
+      name,
+      price,
+      description,
+      req.file.path
+    );
+    res.status(200).json({ message: "Product updated successfully", product });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
