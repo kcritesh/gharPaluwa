@@ -12,6 +12,6 @@ import productRoutes from "./products/productRoutes.js";
 router.use("/auth", authRoutes); // localhost:9000/api/auth/register or localhost:9000/api/auth/login
 
 // ==================Protected routes=======================
-router.use("/products", authenticateToken, productRoutes); // localhost:9000/api/products both GET and POST
+router.use("/products", productRoutes); // localhost:9000/api/products both GET and POST
 
 export default router;
