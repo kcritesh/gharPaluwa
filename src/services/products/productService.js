@@ -42,3 +42,12 @@ export async function getProducts() {
     throw new Error(error);
   }
 }
+
+export async function deleteProduct(id) {
+  try {
+    const product = await Product.findByIdAndDelete(id);
+    return product;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
