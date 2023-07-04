@@ -1,10 +1,17 @@
 import express from "express";
 const router = express.Router();
+import { upload } from "../../utils/Multer.js";
 
 // Import the relevant controllers
-import { createProduct } from "../../controllers/products/productController.js";
+import {
+  createProduct,
+  getProducts,
+} from "../../controllers/products/productController.js";
+import { authenticateToken } from "../../middleware/index.js";
+// Multer Configuration
 
 // Define the routes
-router.post("/", createProduct);
+router.post("/", authenticateToken, upload.single("img"), createProduct);
+router.get("/getallproducts", getProducts);
 
 export default router;

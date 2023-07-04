@@ -1,11 +1,11 @@
 import Product from "../../models/Product.js";
-// import ImageUploadService from "../cloudinary/ImageUploadService.js";
+import { uploadImage } from "../cloudinary/ImageUploadService.js";
 
 export async function createProduct(
   name,
   price,
   description,
-  imageUrl,
+  img,
   userId,
   username
 ) {
@@ -15,13 +15,13 @@ export async function createProduct(
       throw new Error("Product with the same name already exists");
     }
 
-    // const cloudinaryImageUrl = await ImageUploadService.uploadImage(imageUrl);
+    const imgUrl = await uploadImage(img);
 
     const product = new Product({
       name,
       price,
       description,
-      imageUrl,
+      imgUrl,
       userId,
       username,
     });
@@ -34,4 +34,11 @@ export async function createProduct(
   }
 }
 
-// Add other functions as needed, e.g., getProduct, updateProduct, deleteProduct
+export async function getProducts() {
+  try {
+    const products = await Product.find();
+    return products;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
