@@ -1,10 +1,4 @@
-import Users from "../../models/User.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import * as AuthService from "../../services/auth/authService.js";
-
-const { hash, compare } = bcrypt;
-const { sign } = jwt;
 
 const register = async (req, res) => {
   const {
