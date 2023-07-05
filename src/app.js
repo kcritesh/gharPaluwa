@@ -10,7 +10,6 @@ import rootRoutes from "./routes/index.js";
 const app = express();
 const port = 9000;
 
-// app.use(upload.none());
 app.use(json());
 
 app.use("/api", rootRoutes);
