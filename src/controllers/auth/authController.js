@@ -1,6 +1,6 @@
 import * as AuthService from "../../services/auth/authService.js";
 
-const register = async (req, res) => {
+export const register = async (req, res) => {
   const {
     firstName,
     lastName,
@@ -30,7 +30,7 @@ const register = async (req, res) => {
 
 // for login
 
-const login = async (req, res) => {
+export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     const accessToken = await AuthService.loginUser(email, password);
@@ -41,7 +41,3 @@ const login = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
-
-
-export { register, login };
