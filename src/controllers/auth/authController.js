@@ -14,12 +14,12 @@ export const register = async (req, res) => {
   try {
     const user = await AuthService.registerUser(
       username,
+      email,
       password,
       confirmPassword,
       firstName,
       lastName,
       address,
-      email,
       roles
     );
     return res.status(200).json({ message: "User created successfully", user });

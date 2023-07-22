@@ -4,9 +4,9 @@ import jwt from "jsonwebtoken";
 
 export async function registerUser(
   username,
+  email,
   password,
   confirmPassword,
-  email,
   firstName,
   lastName,
   address,
