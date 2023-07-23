@@ -38,6 +38,14 @@ const registerSchema = new Schema({
     required: true,
     enum: validRoles,
   },
+  isEmailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  isPhoneVerified: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export default model("Users", registerSchema);
