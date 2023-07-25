@@ -36,9 +36,12 @@ const registerSchema = new Schema({
   password: {
     type: String,
     required: true,
-    minlength: [6, "Minimun password length is 6"]
+    minlength: [6, "Minimun password length is 6"],
+    select: false,
+    match: [/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/,"Password must have uppercase, lowercase and special character."],
+    
   },
-  
+
   roles: {
     type: String,
     required: true,
