@@ -34,9 +34,25 @@ export async function createProduct(
   }
 }
 
-export async function getProducts() {
+export async function getAllProducts() {
   try {
     const products = await Product.find();
+    return products;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+export async function getProductsByQuery(searchQuery) {
+  try {
+    let query = {}; // Empty query by default
+
+    if (searchQuery) {
+      // If a search query is provided, create a regular expression to perform a case-insensitive search
+      const searchRegex = new RegExp(searchQuery, 'i');
+      query = { name: searchRegex }; // Modify the field name ('name' in this case) according to your data model
+    }
+
+    const products = await Product.find(query);
     return products;
   } catch (error) {
     throw new Error(error);

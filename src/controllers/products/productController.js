@@ -18,10 +18,20 @@ export async function createProduct(req, res) {
   }
 }
 
-export async function getProducts(req, res) {
+export async function getAllProducts(req, res) {
   try {
-    const products = await ProductService.getProducts();
+    const products = await ProductService.getAllProducts();
     res.status(200).json({ products });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+export async function getProductsByQuery(req,res){
+  const {query} = req.body;
+  try {
+    const products = await ProductService.getProductsByQuery(query);
+    res.status(200).json({products});
+    
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
