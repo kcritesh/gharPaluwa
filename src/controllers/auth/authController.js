@@ -41,3 +41,16 @@ export const login = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// for verify email
+export const verifyEmail = async (req, res) => {
+  const { token } = req.params;
+  try {
+    const user = await AuthService.verifyEmail(token);
+    return res
+      .status(200)
+      .json({ message: "Email verified successfully", user });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};

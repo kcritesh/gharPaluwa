@@ -1,6 +1,8 @@
 import Users from "../../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import * as EmailService from "../../services/email/emailServices.js";
+import User from "../../models/User.js";
 
 export async function registerUser(
   username,
@@ -36,6 +38,9 @@ export async function registerUser(
     });
     // Save the user to the database
     await newUser.save();
+    // send verification email
+    const token = EmailService.generateToken(email);
+    await EmailService.sendVerificationEmail(email, token);
     return newUser;
   } catch (error) {
     throw new Error(error);
@@ -63,3 +68,23 @@ export async function loginUser(email, password) {
     throw new Error(error);
   }
 }
+
+export const verifyEmail = async (token) => {
+  try {
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const { email } = decodedToken.email;
+
+    const user = await User.findOneAndUpdate(
+      { email },
+      { isEmailVerified: true },
+      { new: true } // Add the new option to get the updated user
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return user;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
