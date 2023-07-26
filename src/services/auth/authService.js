@@ -72,7 +72,7 @@ export async function loginUser(email, password) {
 export const verifyEmail = async (token) => {
   try {
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const email = decodedToken.email;
+    const { email } = decodedToken;
 
     const user = await User.findOneAndUpdate(
       { email },

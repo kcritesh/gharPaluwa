@@ -45,7 +45,6 @@ export const login = async (req, res) => {
 // for verify email
 export const verifyEmail = async (req, res) => {
   const { token } = req.params;
-  console.log(token);
   try {
     const user = await AuthService.verifyEmail(token);
     return res
