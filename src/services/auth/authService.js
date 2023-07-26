@@ -72,7 +72,7 @@ export async function loginUser(email, password) {
 export const verifyEmail = async (token) => {
   try {
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    const { email } = decodedToken.email;
+    const { email } = decodedToken;
 
     const user = await User.findOneAndUpdate(
       { email },
@@ -81,7 +81,7 @@ export const verifyEmail = async (token) => {
     );
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      throw new Error({ message: "User doesnot exist" });
     }
     return user;
   } catch (error) {
