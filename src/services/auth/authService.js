@@ -50,7 +50,8 @@ export async function registerUser(
 export async function loginUser(email, password) {
   try {
     // Check if the user exists in the database
-    const user = await Users.findOne({ email });
+    const user = await Users.findOne({ email }).select("+password");
+
     if (!user) {
       throw new Error("User doesnot exist");
     }
