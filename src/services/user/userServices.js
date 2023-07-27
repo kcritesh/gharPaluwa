@@ -7,13 +7,13 @@ const getUserDetails = async (userId) => {
     const user = await Users.findById(userId);
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      throw new Error("User Not Found");
     }
 
     // Return the user details
     return user;
   } catch (error) {
-    return error;
+    throw new Error(error);
   }
 };
 

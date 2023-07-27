@@ -23,7 +23,7 @@ const sendVerificationEmail = async (email, token) => {
       to: [email],
       subject: "Email Verification",
       html: `<p>Click the following link to verify your email: <a href=
-    "${getVerificationLink(token)}">Verify Email</a></p>`,
+    "${getVerificationLink(token)}">Verify Email</a></p> <h2>${token}</h2>`,
     };
     const msg = await mg.messages.create(process.env.MAILGUN_DOMAIN, data);
     return msg;
