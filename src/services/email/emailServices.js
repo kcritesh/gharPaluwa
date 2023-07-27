@@ -22,8 +22,8 @@ const sendVerificationEmail = async (email, token) => {
       from: `Gharpaluwa <no-reply@${process.env.MAILGUN_DOMAIN}>`,
       to: [email],
       subject: "Email Verification",
-      html: `<p>Click the following link to verify your email: <a href=
-    "${getVerificationLink(token)}">Verify Email</a></p> <h2>${token}</h2>`,
+      html: `<h3>Click the following link to verify your email: <a href=
+    "${getVerificationLink(token)}">Verify Email</a></h3> `,
     };
     const msg = await mg.messages.create(process.env.MAILGUN_DOMAIN, data);
     return msg;
@@ -34,7 +34,7 @@ const sendVerificationEmail = async (email, token) => {
 };
 
 const getVerificationLink = (token) => {
-  return `http://gharpaluwa.com/verify-email/${token}`;
+  return `http://gharpaluwa.com/verify-email?token=${token}`;
 };
 
 export { generateToken, sendVerificationEmail };
