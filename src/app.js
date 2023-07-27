@@ -1,6 +1,7 @@
 import express, { json } from "express";
 
 import connectDb from "./database/index.js";
+import cors from "cors";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -11,6 +12,7 @@ const app = express();
 const port = 9000;
 
 app.use(json());
+app.use(cors());
 
 app.use("/api", rootRoutes);
 
