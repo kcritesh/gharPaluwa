@@ -16,9 +16,11 @@ export async function registerUser(
 ) {
   try {
     // Check if user already exists
-    const existingUser = await Users.findOne({ email });
+    const existingUser = await Users.findOne({
+      $or: [{ username }, { email }],
+    });
     if (existingUser) {
-      throw new Error("User with the same email already exists");
+      throw new Error("User with the same Email or Username already exists");
     }
     // Check if password and confirm password match
     if (password !== confirmPassword) {
