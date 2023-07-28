@@ -16,9 +16,11 @@ export async function registerUser(
 ) {
   try {
     // Check if user already exists
-    const existingUser = await Users.findOne({ email });
+    const existingUser = await Users.findOne({
+      $or: [{ username }, { email }],
+    });
     if (existingUser) {
-      throw new Error("User with the same email already exists");
+      throw new Error("User with the same Email or Username already exists");
     }
     // Check if password and confirm password match
     if (password !== confirmPassword) {
@@ -50,7 +52,8 @@ export async function registerUser(
 export async function loginUser(email, password) {
   try {
     // Check if the user exists in the database
-    const user = await Users.findOne({ email });
+    const user = await Users.findOne({ email }).select("+password");
+
     if (!user) {
       throw new Error("User doesnot exist");
     }
