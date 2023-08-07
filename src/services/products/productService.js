@@ -48,7 +48,7 @@ export async function getAllProductsOfVendor(userId) {
     const products = await Product.find({ userId }).exec(); // Populate the userId field with the user details
     return products;
   } catch (error) {
-    console.log("error", error);
+
     throw new Error(error);
   }
 }
