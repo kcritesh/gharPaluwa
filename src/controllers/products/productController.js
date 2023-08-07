@@ -26,12 +26,23 @@ export async function getAllProducts(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
-export async function getProductsByQuery(req,res){
-  const {query} = req.body;
+export async function getProductsByQuery(req, res) {
+  const { query } = req.body;
+  console.log("query in controller", query);
   try {
     const products = await ProductService.getProductsByQuery(query);
-    res.status(200).json({products});
-    
+    res.status(200).json({ products });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
+export async function getAllProductsOfVendor(req, res) {
+  try {
+    const { userId } = req.User;
+    console.log("userId", userId);
+    const products = await ProductService.getAllProductsOfVendor(userId);
+    res.status(200).json({ products });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
