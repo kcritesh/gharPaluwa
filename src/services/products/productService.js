@@ -42,13 +42,25 @@ export async function getAllProducts() {
     throw new Error(error);
   }
 }
+
+export async function getAllProductsOfVendor(userId) {
+  try {
+    const products = await Product.find({ userId }).exec(); // Populate the userId field with the user details
+    return products;
+  } catch (error) {
+
+    throw new Error(error);
+  }
+}
+
+//========== Function to get all products of all vendors========
 export async function getProductsByQuery(searchQuery) {
   try {
     let query = {}; // Empty query by default
 
     if (searchQuery) {
       // If a search query is provided, create a regular expression to perform a case-insensitive search
-      const searchRegex = new RegExp(searchQuery, 'i');
+      const searchRegex = new RegExp(searchQuery, "i");
       query = { name: searchRegex }; // Modify the field name ('name' in this case) according to your data model
     }
 
@@ -59,6 +71,7 @@ export async function getProductsByQuery(searchQuery) {
   }
 }
 
+// =======Function to delete a product by id======
 export async function deleteProduct(id) {
   try {
     const product = await Product.findByIdAndDelete(id);
