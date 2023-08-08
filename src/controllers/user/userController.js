@@ -6,7 +6,6 @@ export const getUserDetails = async (req, res) => {
     const user = await UserServices.getUserDetails(userId);
     return res.status(200).json({ user });
   } catch (error) {
-    console.log("error in controller");
     res.status(400).json({ message: error.message });
   }
 };

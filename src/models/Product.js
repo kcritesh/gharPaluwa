@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "Users",
     required: true,
   },
   username: {
@@ -36,6 +36,8 @@ const productSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+productSchema.index({ userId: 1 });
 
 const Product = mongoose.model("Product", productSchema);
 

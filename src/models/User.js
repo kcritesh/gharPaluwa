@@ -4,7 +4,7 @@ import { Schema, model } from "mongoose";
 import isEmail from "validator/lib/isEmail.js";
 const validRoles = ["seller", "buyer"];
 
-const registerSchema = new Schema({
+const userSchema = new Schema({
   firstName: {
     type: String,
     required: true,
@@ -59,4 +59,4 @@ const registerSchema = new Schema({
   },
 });
 
-export default model("Users", registerSchema);
+export default model("Users", userSchema);
