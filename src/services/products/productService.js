@@ -48,7 +48,6 @@ export async function getAllProductsOfVendor(userId) {
     const products = await Product.find({ userId }).exec(); // Populate the userId field with the user details
     return products;
   } catch (error) {
-
     throw new Error(error);
   }
 }
@@ -75,9 +74,14 @@ export async function getProductsByQuery(searchQuery) {
 export async function deleteProduct(id) {
   try {
     const product = await Product.findByIdAndDelete(id);
+
+    if (!product) {
+      throw new Error(`Product with ID ${id} not found.`);
+    }
+
     return product;
   } catch (error) {
-    throw new Error(error);
+    throw error; // Re-throw the original error
   }
 }
 
@@ -95,6 +99,6 @@ export async function updateProduct(id, name, price, description, img) {
     await product.save();
     return product;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 }
