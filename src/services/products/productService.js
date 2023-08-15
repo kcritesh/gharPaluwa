@@ -99,6 +99,6 @@ export async function updateProduct(id, name, price, description, img) {
     await product.save();
     return product;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 }
