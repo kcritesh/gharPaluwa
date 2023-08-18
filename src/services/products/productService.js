@@ -71,14 +71,19 @@ export async function getProductsByQuery(searchQuery) {
 }
 
 // =======Function to delete a product by id======
-export async function deleteProduct(id) {
+export async function deleteProduct(id, userId) {
   try {
-    const product = await Product.findByIdAndDelete(id);
+    const product = await Product.findById(id);
 
     if (!product) {
       throw new Error(`Product with ID ${id} not found.`);
     }
 
+    if (product.userId !== userId) {
+      throw new Error("You are not authorized to delete this product.");
+    }
+
+    await Product.findByIdAndDelete(id);
     return product;
   } catch (error) {
     throw error; // Re-throw the original error
