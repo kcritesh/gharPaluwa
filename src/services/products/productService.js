@@ -90,11 +90,14 @@ export async function deleteProduct(id, userId) {
   }
 }
 
-export async function updateProduct(id, name, price, description, img) {
+export async function updateProduct(id, name, price, description, img, userId) {
   try {
     const product = await Product.findById(id);
     if (!product) {
       throw new Error("Product not found");
+    }
+    if (product.userId !== userId) {
+      throw new Error("You are not authorized to update this product.");
     }
     const imgUrl = await uploadImage(img);
     product.name = name;
