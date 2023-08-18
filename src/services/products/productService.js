@@ -79,7 +79,7 @@ export async function deleteProduct(id, userId) {
       throw new Error(`Product with ID ${id} not found.`);
     }
 
-    if (product.userId !== userId) {
+    if (product.userId.toString() !== userId) {
       throw new Error("You are not authorized to delete this product.");
     }
 
@@ -96,7 +96,7 @@ export async function updateProduct(id, name, price, description, img, userId) {
     if (!product) {
       throw new Error("Product not found");
     }
-    if (product.userId !== userId) {
+    if (product.userId.toString() !== userId) {
       throw new Error("You are not authorized to update this product.");
     }
     const imgUrl = await uploadImage(img);
