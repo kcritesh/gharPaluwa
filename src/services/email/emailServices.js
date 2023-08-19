@@ -34,7 +34,7 @@ const sendVerificationEmail = async (email, token) => {
 };
 
 const getVerificationLink = (token) => {
-  return `http://gharpaluwa.com/verify-email?token=${token}`;
+  return `http://dashboard.gharpaluwa.com/verify-email?token=${token}`;
 };
 
 export { generateToken, sendVerificationEmail };
