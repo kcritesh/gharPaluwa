@@ -15,6 +15,9 @@ app.use(json());
 app.use(cors());
 
 app.use("/api", rootRoutes);
+app.use("/", (req, res) => {
+  res.send("Welcome to the API Gharpaluwa");
+});
 
 const startServer = () => {
   try {
