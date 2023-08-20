@@ -36,6 +36,16 @@ export async function getProductsByQuery(req, res) {
   }
 }
 
+export async function getProductsById(req, res) {
+  const { id } = req.params;
+  try {
+    const product = await ProductService.getProductsById(id);
+    res.status(200).json({ product });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 export async function getAllProductsOfVendor(req, res) {
   try {
     const { userId } = req.User;
