@@ -70,6 +70,15 @@ export async function getProductsByQuery(searchQuery) {
   }
 }
 
+export async function getProductsById(id) {
+  try {
+    const product = await Product.findById(id);
+    return product;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 // =======Function to delete a product by id======
 export async function deleteProduct(id, userId) {
   try {
