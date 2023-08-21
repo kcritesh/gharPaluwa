@@ -15,7 +15,11 @@ export async function createProduct(
       throw new Error("Product with the same name already exists");
     }
 
-    const imgUrl = await uploadImage(img);
+    let imgUrl = null; // Initialize imgUrl with null
+
+    if (img) {
+      imgUrl = await uploadImage(img);
+    }
 
     const product = new Product({
       name,
@@ -31,6 +35,33 @@ export async function createProduct(
     return product;
   } catch (error) {
     throw new Error(error);
+  }
+}
+
+export async function updateProduct(id, name, price, description, img, userId) {
+  try {
+    const product = await Product.findById(id);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+    if (product.userId.toString() !== userId) {
+      throw new Error("You are not authorized to update this product.");
+    }
+
+    if (img) {
+      const imgUrl = await uploadImage(img);
+      product.imgUrl = imgUrl;
+    }
+
+    product.name = name;
+    product.price = price;
+    product.description = description;
+
+    await product.save();
+
+    return product;
+  } catch (error) {
+    throw error;
   }
 }
 
@@ -96,26 +127,5 @@ export async function deleteProduct(id, userId) {
     return product;
   } catch (error) {
     throw error; // Re-throw the original error
-  }
-}
-
-export async function updateProduct(id, name, price, description, img, userId) {
-  try {
-    const product = await Product.findById(id);
-    if (!product) {
-      throw new Error("Product not found");
-    }
-    if (product.userId.toString() !== userId) {
-      throw new Error("You are not authorized to update this product.");
-    }
-    const imgUrl = await uploadImage(img);
-    product.name = name;
-    product.price = price;
-    product.description = description;
-    product.imgUrl = imgUrl;
-    await product.save();
-    return product;
-  } catch (error) {
-    throw error;
   }
 }
