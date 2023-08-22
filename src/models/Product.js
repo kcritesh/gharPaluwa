@@ -27,6 +27,11 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  quantity: {
+    type: Number,
+    default: 0, // Default quantity is 0
+    min: 0, // Ensure quantity cannot be negative
+  },
   createdAt: {
     type: Date,
     default: Date.now,

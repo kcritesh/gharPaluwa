@@ -1,7 +1,7 @@
 import * as ProductService from "../../services/products/productService.js";
 
 export async function createProduct(req, res) {
-  const { name, price, description } = req.body;
+  const { name, price, description, quantity } = req.body;
   const { username, userId } = req.User; // from the authenticateToken middleware
 
   let imagePath = null; // Initialize imagePath with null
@@ -14,6 +14,7 @@ export async function createProduct(req, res) {
       name,
       price,
       description,
+      quantity || 0,
       imagePath,
       userId,
       username
@@ -25,9 +26,13 @@ export async function createProduct(req, res) {
 }
 
 export async function getAllProducts(req, res) {
+  const { page, pageSize } = req.query;
   try {
-    const products = await ProductService.getAllProducts();
-    res.status(200).json({ products });
+    const productsData = await ProductService.getAllProducts(
+      page || 1,
+      pageSize || 10
+    );
+    res.status(200).json(productsData);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

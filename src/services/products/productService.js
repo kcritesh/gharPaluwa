@@ -5,6 +5,7 @@ export async function createProduct(
   name,
   price,
   description,
+  quantity,
   img,
   userId,
   username
@@ -25,6 +26,7 @@ export async function createProduct(
       name,
       price,
       description,
+      quantity,
       imgUrl,
       userId,
       username,
@@ -65,10 +67,23 @@ export async function updateProduct(id, name, price, description, img, userId) {
   }
 }
 
-export async function getAllProducts() {
+export async function getAllProducts(pageNumber, pageSize) {
   try {
-    const products = await Product.find();
-    return products;
+    const totalCount = await Product.countDocuments();
+    const totalPages = Math.ceil(totalCount / pageSize);
+    const offset = (pageNumber - 1) * pageSize;
+
+    const products = await Product.find()
+      .sort({ createdAt: -1 }) // Sort in descending order (latest first)
+      .skip(offset)
+      .limit(pageSize);
+
+    return {
+      products,
+      totalPages,
+      currentPage: pageNumber,
+      totalProducts: totalCount,
+    };
   } catch (error) {
     throw new Error(error);
   }
