@@ -9,6 +9,7 @@ import authRoutes from "./auth/authRoutes.js";
 import productRoutes from "./products/productRoutes.js";
 import userRoutes from "./user/userRoutes.js";
 import orderRoutes from "./orders/orderRoutes.js";
+import cartRoutes from "./cart/cartRoutes.js";
 
 // Use the imported routes
 router.use("/auth", authRoutes); // localhost:9000/api/auth/register or localhost:9000/api/auth/login
@@ -19,5 +20,7 @@ router.use("/products", productRoutes); // localhost:9000/api/products both GET 
 router.use("/user", userRoutes);
 
 router.use("/orders", orderRoutes);
+
+router.use("/cart", cartRoutes);
 
 export default router;
