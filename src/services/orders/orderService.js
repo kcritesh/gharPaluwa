@@ -22,9 +22,11 @@ export async function createOrder(customerId, orderItems) {
       totalPrice += product.price * item.quantity;
       item.price = product.price;
       item.name = product.name;
+      item.vendorId = product.userId;
 
       // Update the stock of the product
       product.quantity -= item.quantity;
+      //   await product.save();
     }
 
     const order = new Order({
@@ -34,6 +36,7 @@ export async function createOrder(customerId, orderItems) {
         quantity: item.quantity,
         price: item.price,
         name: item.name,
+        vendorId: item.vendorId,
       })),
       totalPrice,
     });
@@ -85,6 +88,18 @@ export async function getCustomerOrders(customerId) {
     const orders = await Order.find({ customer: customerId }).populate(
       "products.product"
     );
+    return orders;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function getOrdersByVendorId(vendorId) {
+  try {
+    const orders = await Order.find({
+      "products.vendorId": vendorId,
+    }).populate("customer", "firstName lastName username email"); // Populate customer details
+
     return orders;
   } catch (error) {
     throw new Error(error);
