@@ -10,3 +10,13 @@ export async function createOrder(req, res) {
     res.status(500).json({ message: error.message });
   }
 }
+
+export async function getOrdersByVendorId(req, res) {
+  const { userId } = req.User;
+  try {
+    const orders = await OrderServices.getOrdersByVendorId(userId);
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}

@@ -29,6 +29,12 @@ const orderSchema = new mongoose.Schema({
         required: true,
         min: 1,
       },
+      vendorId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Users",
+        required: true,
+      },
+      
     },
   ],
   status: {
