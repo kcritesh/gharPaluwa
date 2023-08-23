@@ -83,12 +83,33 @@ export async function updateOrderStatus(orderId, newStatus) {
   }
 }
 
-export async function getCustomerOrders(customerId) {
+export async function getOrdersByCustomerId(customerId) {
   try {
-    const orders = await Order.find({ customer: customerId }).populate(
-      "products.product"
+    const orders = await Order.find({
+      customer: customerId,
+    }).populate(
+      "products.product customer",
+      "name price firstName lastName username email"
     );
-    return orders;
+
+    const customerOrders = [];
+
+    orders.forEach((order) => {
+      const orderWithCustomerProducts = {
+        orderId: order._id,
+        products: order.products,
+        totalPrice: order.totalPrice,
+        createdAt: order.createdAt,
+      };
+
+      customerOrders.push(orderWithCustomerProducts);
+    });
+
+    const result = {
+      customerOrders: customerOrders,
+    };
+
+    return result;
   } catch (error) {
     throw new Error(error);
   }
@@ -100,7 +121,25 @@ export async function getOrdersByVendorId(vendorId) {
       "products.vendorId": vendorId,
     }).populate("customer", "firstName lastName username email"); // Populate customer details
 
-    return orders;
+    const vendorOrders = [];
+
+    orders.forEach((order) => {
+      const orderWithVendorProducts = {
+        orderId: order._id,
+        customer: order.customer,
+        products: order.products,
+        totalPrice: order.totalPrice,
+        createdAt: order.createdAt,
+      };
+
+      vendorOrders.push(orderWithVendorProducts);
+    });
+
+    const result = {
+      vendorOrders: vendorOrders,
+    };
+
+    return result;
   } catch (error) {
     throw new Error(error);
   }
