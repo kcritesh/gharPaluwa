@@ -82,7 +82,7 @@ export async function updateProduct(req, res) {
   try {
     const { id } = req.params;
     const { userId } = req.User;
-    const { name, price, description } = req.body;
+    const { name, price, description, quantity } = req.body;
 
     let imagePath = null; // Initialize imagePath with null
 
@@ -95,6 +95,7 @@ export async function updateProduct(req, res) {
       name,
       price,
       description,
+      quantity,
       imagePath,
       userId
     );

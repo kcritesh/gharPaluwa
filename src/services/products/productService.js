@@ -40,7 +40,15 @@ export async function createProduct(
   }
 }
 
-export async function updateProduct(id, name, price, description, img, userId) {
+export async function updateProduct(
+  id,
+  name,
+  price,
+  description,
+  quantity,
+  img,
+  userId
+) {
   try {
     const product = await Product.findById(id);
     if (!product) {
@@ -58,6 +66,9 @@ export async function updateProduct(id, name, price, description, img, userId) {
     product.name = name;
     product.price = price;
     product.description = description;
+    if (quantity) {
+      product.quantity = quantity;
+    }
 
     await product.save();
 
