@@ -91,3 +91,43 @@ export const verifyEmail = async (token) => {
     throw new Error(error);
   }
 };
+
+// for reset password request
+export const resetPasswordRequest = async (email) => {
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new Error("User doesnot exist");
+    }
+    // Generate a token
+    const resetToken = EmailService.generateToken(email);
+    const resetTokenExpiration = new Date();
+    resetTokenExpiration.setHours(resetTokenExpiration.getHours() + 1);
+    user.resetToken = {
+      token: resetToken,
+      expiration: resetTokenExpiration,
+    };
+    await user.save();
+    return user;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// Verify reset password
+export const verifyResetPassword = async (resetToken) => {
+  try {
+    const user = await User.findOne({
+      "resetToken.token": resetToken,
+      "resetToken.expiration": { $gt: Date.now() },
+    });
+    if (!user) {
+      throw new Error("Invalid or expired reset token");
+    }
+    // Return the user or a success message if needed
+    return user;
+  } catch (error) {
+    // Handle the error and provide a more informative error message
+    throw new Error(`Reset password verification failed: ${error.message}`);
+  }
+};
