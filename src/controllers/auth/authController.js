@@ -78,3 +78,21 @@ export const verifyResetPassword = async (req, res) => {
     res.status(400).json({ message: error.message, status: "failed" });
   }
 };
+
+// for reset password
+export const resetPassword = async (req, res) => {
+  try {
+    const { resetToken, password, confirmPassword } = req.body;
+
+    const user = await AuthService.resetPassword(
+      resetToken,
+      password,
+      confirmPassword
+    );
+    return res
+      .status(200)
+      .json({ message: "Password reset successfully", user });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};

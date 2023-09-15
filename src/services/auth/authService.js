@@ -131,3 +131,28 @@ export const verifyResetPassword = async (resetToken) => {
     throw new Error(`Reset password verification failed: ${error.message}`);
   }
 };
+
+// Reset password
+export const resetPassword = async (resetToken, password, confirmPassword) => {
+  try {
+    if (password !== confirmPassword) {
+      throw new Error("Password and confirm password doesnot match");
+    }
+    const user = await User.findOne({
+      "resetToken.token": resetToken,
+      "resetToken.expiration": { $gt: Date.now() },
+    });
+    if (!user) {
+      throw new Error("Invalid or expired reset token");
+    }
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Update the user's password
+    user.password = hashedPassword;
+    user.resetToken = undefined;
+    await user.save();
+  } catch (error) {
+    throw new Error(error);
+  }
+};
