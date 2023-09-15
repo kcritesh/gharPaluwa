@@ -87,7 +87,7 @@ export const sendOrderConfirmationEmailToCustomer = async (userId, order) => {
       .replace("[ORDER_ITEMS]", orderItemsHTML)
       .replace("[TOTAL]", `Nrs. ${order.totalPrice.toFixed(2)}`)
       .replace("[Customer Name]", userFirstName)
-      .replace("[TOTAL IN WORDS]", totalAmountWords)
+      .replace("[TOTAL IN WORDS]", totalAmountWords);
 
     await sendEmail({
       to: userEmail,
@@ -99,4 +99,24 @@ export const sendOrderConfirmationEmailToCustomer = async (userId, order) => {
   } catch (error) {
     throw new Error(error);
   }
+};
+
+export const sendResetPasswordEmail = async (email, token) => {
+  try {
+    const data = {
+      from: `Gharpaluwa <no-reply@${process.env.MAILGUN_DOMAIN}>`,
+      to: [email],
+      subject: "Reset Password",
+      html: `<h3>Click the following link to reset your password: <a href=
+    "${getPasswordResetLink(token)}">Reset Password</a></h3> `,
+    };
+    const msg = await mg.messages.create(process.env.MAILGUN_DOMAIN, data);
+    return msg;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const getPasswordResetLink = (token) => {
+  return `http://dashboard.gharpaluwa.com/reset-password?token=${token}`;
 };

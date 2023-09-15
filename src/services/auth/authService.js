@@ -108,6 +108,8 @@ export const resetPasswordRequest = async (email) => {
       expiration: resetTokenExpiration,
     };
     await user.save();
+    // Send the email
+    await EmailService.sendResetPasswordEmail(user.email, resetToken);
     return user;
   } catch (error) {
     throw new Error(error);
