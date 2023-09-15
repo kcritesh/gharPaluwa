@@ -7,6 +7,7 @@ import User from "../../models/User.js";
 export async function registerUser(
   username,
   email,
+  phone,
   password,
   confirmPassword,
   firstName,
@@ -17,7 +18,7 @@ export async function registerUser(
   try {
     // Check if user already exists
     const existingUser = await Users.findOne({
-      $or: [{ username }, { email }],
+      $or: [{ username }, { email }, { phone }],
     });
     if (existingUser) {
       throw new Error("User with the same Email or Username already exists");
@@ -33,6 +34,7 @@ export async function registerUser(
       firstName,
       lastName,
       email,
+      phone,
       username,
       address,
       password: hashedPassword,

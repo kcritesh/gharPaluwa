@@ -5,6 +5,7 @@ export const register = async (req, res) => {
     firstName,
     lastName,
     email,
+    phone,
     address,
     username,
     password,
@@ -15,6 +16,7 @@ export const register = async (req, res) => {
     const user = await AuthService.registerUser(
       username,
       email,
+      phone,
       password,
       confirmPassword,
       firstName,

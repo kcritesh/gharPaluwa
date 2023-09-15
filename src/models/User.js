@@ -2,6 +2,8 @@
 // Schema is a class that allows us to represent a collection of fields
 import { Schema, model } from "mongoose";
 import isEmail from "validator/lib/isEmail.js";
+import validator from "validator";
+const { isMobilePhone } = validator;
 const validRoles = ["seller", "buyer"];
 
 const userSchema = new Schema({
@@ -25,6 +27,20 @@ const userSchema = new Schema({
     required: true,
     unique: true,
     validate: [isEmail, "please enter valid email"],
+  },
+
+  phone: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: {
+      validator: (value) => {
+        // Example: Validate against phone numbers in the United States
+        console.log("value", value);
+        return isMobilePhone(value, "ne-NP");
+      },
+      message: "Please enter a valid phone number",
+    },
   },
 
   username: {
