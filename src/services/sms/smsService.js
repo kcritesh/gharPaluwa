@@ -14,3 +14,23 @@ export const checkBalance = async () => {
     throw new Error(error);
   }
 };
+
+export const sendSMS = async (to, message) => {
+  try {
+    const data = await fetch("https://sms.sociair.com/api/send", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        Authorization: "Bearer " + process.env.SOCIAR_API_KEY,
+      },
+      body: JSON.stringify({
+        mobile: to,
+        message: message,
+      }),
+    });
+    const response = await data.json();
+    return response;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
