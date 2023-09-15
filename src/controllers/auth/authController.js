@@ -54,3 +54,45 @@ export const verifyEmail = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+//for reset password request
+export const resetPasswordRequest = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await AuthService.resetPasswordRequest(email);
+    return res.status(200).json({ message: "Reset password link sent", user });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// for verify reset password
+export const verifyResetPassword = async (req, res) => {
+  try {
+    const { resetToken } = req.body;
+    const user = await AuthService.verifyResetPassword(resetToken);
+    return res
+      .status(200)
+      .json({ message: "Reset password link verified", status: "verified" });
+  } catch (error) {
+    res.status(400).json({ message: error.message, status: "failed" });
+  }
+};
+
+// for reset password
+export const resetPassword = async (req, res) => {
+  try {
+    const { resetToken, password, confirmPassword } = req.body;
+
+    const user = await AuthService.resetPassword(
+      resetToken,
+      password,
+      confirmPassword
+    );
+    return res
+      .status(200)
+      .json({ message: "Password reset successfully", user });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};

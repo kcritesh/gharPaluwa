@@ -12,6 +12,7 @@ import orderRoutes from "./orders/orderRoutes.js";
 import cartRoutes from "./cart/cartRoutes.js";
 
 // Use the imported routes
+
 router.use("/auth", authRoutes); // localhost:9000/api/auth/register or localhost:9000/api/auth/login
 
 // ==================Protected routes=======================

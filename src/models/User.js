@@ -49,14 +49,30 @@ const userSchema = new Schema({
     required: true,
     enum: validRoles,
   },
+
   isEmailVerified: {
     type: Boolean,
     default: false,
   },
+
   isPhoneVerified: {
     type: Boolean,
     default: false,
   },
+
+  resetToken: {
+    token: {
+      type: String,
+      default: null,
+    },
+    expiration: {
+      type: Date,
+      default: null,
+    },
+  },
 });
+
+userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ username: 1 }, { unique: true });
 
 export default model("Users", userSchema);
