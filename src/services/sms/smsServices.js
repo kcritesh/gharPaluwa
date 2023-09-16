@@ -17,20 +17,37 @@ export const checkBalance = async () => {
 
 export const sendSMS = async (to, message) => {
   try {
-    const data = await fetch("https://sms.sociair.com/api/send", {
+    console.log("inside send sms");
+    console.log(to, message);
+    console.log(process.env.SOCIAR_API_KEY);
+    const data = await fetch("https://sms.sociair.com/api/sms", {
       method: "POST",
       headers: {
         accept: "application/json",
         Authorization: "Bearer " + process.env.SOCIAR_API_KEY,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        mobile: to,
         message: message,
+        mobile: to,
       }),
     });
+    console.log("after send sms");
+    // console.log(await data.text());
     const response = await data.json();
     return response;
   } catch (error) {
     throw new Error(error);
   }
+};
+
+// Generate OTP
+
+export const generateOTP = () => {
+  const digits = "0123456789";
+  let OTP = "";
+  for (let i = 0; i < 6; i++) {
+    OTP += digits[Math.floor(Math.random() * 10)];
+  }
+  return OTP;
 };

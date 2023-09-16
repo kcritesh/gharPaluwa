@@ -2,11 +2,13 @@ import Users from "../../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as EmailService from "../../services/email/emailServices.js";
+import * as SmsService from "../../services/sms/smsServices.js";
 import User from "../../models/User.js";
 
 export async function registerUser(
   username,
   email,
+  phone,
   password,
   confirmPassword,
   firstName,
@@ -17,7 +19,7 @@ export async function registerUser(
   try {
     // Check if user already exists
     const existingUser = await Users.findOne({
-      $or: [{ username }, { email }],
+      $or: [{ username }, { email }, { phone }],
     });
     if (existingUser) {
       throw new Error("User with the same Email or Username already exists");
@@ -33,6 +35,7 @@ export async function registerUser(
       firstName,
       lastName,
       email,
+      phone,
       username,
       address,
       password: hashedPassword,
@@ -157,6 +160,63 @@ export const resetPassword = async (resetToken, password, confirmPassword) => {
     // Update the user's password
     user.password = hashedPassword;
     user.resetToken = undefined;
+    await user.save();
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// for send phone verification otp
+export const sendPhoneVerification = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error("User doesnot exist");
+    }
+    // if the phone is already verified
+    if (user.isPhoneVerified) {
+      throw new Error("Phone already verified");
+    }
+    // Generate a token
+    const verificationOTP = SmsService.generateOTP();
+    const verificationOTPExpiration = new Date();
+    verificationOTPExpiration.setHours(
+      verificationOTPExpiration.getHours() + 1
+    );
+    user.verificationOTP = {
+      otp: verificationOTP,
+      expiration: verificationOTPExpiration,
+    };
+    await user.save();
+
+    // Send the sms
+    await SmsService.sendSMS(user.phone, verificationOTP);
+    return user;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// Confirm phone verification
+export const verifyPhoneVerification = async (userId, otp) => {
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error("User doesnot exist");
+    }
+    // Check if the OTP is expired
+    if (user.verificationOTP.expiration < Date.now()) {
+      throw new Error("OTP expired! Please request a new one.");
+    }
+
+    // Check if the OTP is the same as the one in the database
+    if (user.verificationOTP.otp !== otp) {
+      throw new Error("Invalid OTP");
+    }
+
+    // Update the user's phone verification status
+    user.isPhoneVerified = true;
+    user.verificationOTP = undefined;
     await user.save();
   } catch (error) {
     throw new Error(error);
