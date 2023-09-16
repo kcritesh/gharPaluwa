@@ -217,6 +217,10 @@ export const verifyPhoneVerification = async (userId, otp) => {
     // Update the user's phone verification status
     user.isPhoneVerified = true;
     user.verificationOTP = undefined;
+
+    // send welcome sms
+    const welcomeMessage = `Dear ${user.firstName},\nWelcome to GharPaluwa.com ! ^_~ Your phone number has been verified successfully.\nThank you for using GharPaluwa.com ! ^_~`;
+    await SmsService.sendSMS(user.phone, welcomeMessage);
     await user.save();
   } catch (error) {
     throw new Error(error);
