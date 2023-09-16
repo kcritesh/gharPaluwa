@@ -181,17 +181,17 @@ export const sendPhoneVerification = async (userId) => {
     const verificationOTP = SmsService.generateOTP();
     const verificationOTPExpiration = new Date();
     verificationOTPExpiration.setHours(
-      verificationOTPExpiration.getHours() + 1
+      verificationOTPExpiration.getHours() + 0.25
     );
     user.verificationOTP = {
       otp: verificationOTP,
       expiration: verificationOTPExpiration,
     };
     await user.save();
-
+    const verificationMessage = `Your verification code is ${verificationOTP}. Your code will expire in 1 hour. DO NOT share this code with anyone. If you did not request a code, please ignore this message. Thank you for using GharPaluwa.com!`;
     // Send the sms
-    await SmsService.sendSMS(user.phone, verificationOTP);
-    return user;
+    await SmsService.sendSMS(user.phone, verificationMessage);
+    return user; // Return the user or a success message if needed
   } catch (error) {
     throw new Error(error);
   }
