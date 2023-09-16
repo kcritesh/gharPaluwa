@@ -86,6 +86,17 @@ const userSchema = new Schema({
       default: null,
     },
   },
+
+  verificationOTP: {
+    otp: {
+      type: String,
+      default: null,
+    },
+    expiration: {
+      type: Date,
+      default: null,
+    },
+  },
 });
 
 userSchema.index({ email: 1 }, { unique: true });
