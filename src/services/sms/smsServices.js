@@ -17,9 +17,6 @@ export const checkBalance = async () => {
 
 export const sendSMS = async (to, message) => {
   try {
-    console.log("inside send sms");
-    console.log(to, message);
-    console.log(process.env.SOCIAR_API_KEY);
     const data = await fetch("https://sms.sociair.com/api/sms", {
       method: "POST",
       headers: {
@@ -32,8 +29,6 @@ export const sendSMS = async (to, message) => {
         mobile: to,
       }),
     });
-    console.log("after send sms");
-    // console.log(await data.text());
     const response = await data.json();
     return response;
   } catch (error) {
