@@ -98,3 +98,28 @@ export const resetPassword = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// for send otp phone verifcation
+export const sendPhoneVerification = async (req, res) => {
+  try {
+    const { userId } = req.User;
+    const user = await AuthService.sendPhoneVerification(userId);
+    return res.status(200).json({ message: "Verification code sent", user });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// for verify phone verification
+export const verifyPhoneVerification = async (req, res) => {
+  try {
+    const { userId } = req.User;
+    const { otp } = req.body;
+    const user = await AuthService.verifyPhoneVerification(userId, otp);
+    return res
+      .status(200)
+      .json({ message: "Phone verified successfully", user });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
