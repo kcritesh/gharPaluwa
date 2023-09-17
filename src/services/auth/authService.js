@@ -188,7 +188,7 @@ export const sendPhoneVerification = async (userId) => {
       expiration: verificationOTPExpiration,
     };
     await user.save();
-    const verificationMessage = `Dear ${user.firstName},\nYour verification code is ${verificationOTP}. Your code will expire in 15 Minutes.\nIf you did not request a code, Please ignore this message.\nThank you for using GharPaluwa.com ! ^_~`;
+    const verificationMessage = `Gharpaluwa: Your OTP (One-Time Password) is ${verificationOTP}. This code is valid for 15 minutes. Do not share it with anyone. Thank you for choosing Gharpaluwa.com.`;
     // Send the sms
     await SmsService.sendSMS(user.phone, verificationMessage);
     return user; // Return the user or a success message if needed
@@ -219,7 +219,8 @@ export const verifyPhoneVerification = async (userId, otp) => {
     user.verificationOTP = undefined;
 
     // send welcome sms
-    const welcomeMessage = `Dear ${user.firstName},\nWelcome to GharPaluwa.com ! ^_~ Your phone number has been verified successfully.\nThank you for using GharPaluwa.com ! ^_~`;
+    const welcomeMessage = `Dear ${user.firstName}, Welcome to GharPaluwa.com! Your phone number has been verified successfully.\nThank you for using GharPaluwa.com! ^_~`;
+
     await SmsService.sendSMS(user.phone, welcomeMessage);
     await user.save();
   } catch (error) {
