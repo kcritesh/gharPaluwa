@@ -171,9 +171,9 @@ export const sendPhoneVerification = async (userId) => {
       throw new Error("User doesnot exist");
     }
     // if the phone is already verified
-    if (user.isPhoneVerified) {
-      throw new Error("Phone already verified");
-    }
+    // if (user.isPhoneVerified) {
+    //   throw new Error("Phone already verified");
+    // }
     // Generate a token
     const verificationOTP = SmsService.generateOTP();
     const verificationOTPExpiration = new Date();
@@ -188,7 +188,6 @@ export const sendPhoneVerification = async (userId) => {
     const verificationMessage = `Gharpaluwa: Your OTP (One-Time Password) is ${verificationOTP}. This code is valid for 15 minutes. Do not share it with anyone. Thank you for choosing Gharpaluwa.com.`;
     // Send the sms
     await SmsService.sendSMS(user.phone, verificationMessage);
-    return user; // Return the user or a success message if needed
   } catch (error) {
     throw new Error(error);
   }
@@ -197,7 +196,9 @@ export const sendPhoneVerification = async (userId) => {
 // Confirm phone verification
 export const verifyPhoneVerification = async (userId, otp) => {
   try {
-    const user = (await User.findById(userId)) + select("verificationOTP");
+    const user = await User.findById(userId).select(
+      "+verificationOTP.otp +verificationOTP.expiration"
+    );
     if (!user) {
       throw new Error("User doesnot exist");
     }

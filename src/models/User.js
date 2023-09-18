@@ -78,25 +78,27 @@ const userSchema = new Schema({
 
   resetToken: {
     token: {
-      select: false,
       type: String,
+      select: false,
       default: null,
     },
     expiration: {
       type: Date,
       default: null,
+      select: false,
     },
   },
 
   verificationOTP: {
     otp: {
-      select: false,
       type: String,
+      select: false,
       default: null,
     },
     expiration: {
       type: Date,
       default: null,
+      select: false,
     },
   },
 });
