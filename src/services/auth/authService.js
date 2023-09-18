@@ -113,7 +113,7 @@ export const resetPasswordRequest = async (email) => {
     await user.save();
     // Send the email
     await EmailService.sendResetPasswordEmail(user.email, resetToken);
-    return user;
+    return "Reset password link sent";
   } catch (error) {
     throw new Error(error);
   }
@@ -200,7 +200,7 @@ export const sendPhoneVerification = async (userId) => {
 // Confirm phone verification
 export const verifyPhoneVerification = async (userId, otp) => {
   try {
-    const user = await User.findById(userId);
+    const user = (await User.findById(userId)) + select("verificationOTP");
     if (!user) {
       throw new Error("User doesnot exist");
     }

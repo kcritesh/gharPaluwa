@@ -61,8 +61,10 @@ export const verifyEmail = async (req, res) => {
 export const resetPasswordRequest = async (req, res) => {
   try {
     const { email } = req.body;
-    const user = await AuthService.resetPasswordRequest(email);
-    return res.status(200).json({ message: "Reset password link sent", user });
+    await AuthService.resetPasswordRequest(email);
+    return res
+      .status(200)
+      .json({ message: "Reset password link sent", status: "sent" });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
