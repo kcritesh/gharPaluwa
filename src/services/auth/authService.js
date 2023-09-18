@@ -113,7 +113,6 @@ export const resetPasswordRequest = async (email) => {
     await user.save();
     // Send the email
     await EmailService.sendResetPasswordEmail(user.email, resetToken);
-    return user;
   } catch (error) {
     throw new Error(error);
   }
@@ -129,8 +128,6 @@ export const verifyResetPassword = async (resetToken) => {
     if (!user) {
       throw new Error("Invalid or expired reset token");
     }
-    // Return the user or a success message if needed
-    return user;
   } catch (error) {
     // Handle the error and provide a more informative error message
     throw new Error(`Reset password verification failed: ${error.message}`);
@@ -174,9 +171,9 @@ export const sendPhoneVerification = async (userId) => {
       throw new Error("User doesnot exist");
     }
     // if the phone is already verified
-    if (user.isPhoneVerified) {
-      throw new Error("Phone already verified");
-    }
+    // if (user.isPhoneVerified) {
+    //   throw new Error("Phone already verified");
+    // }
     // Generate a token
     const verificationOTP = SmsService.generateOTP();
     const verificationOTPExpiration = new Date();
@@ -188,10 +185,9 @@ export const sendPhoneVerification = async (userId) => {
       expiration: verificationOTPExpiration,
     };
     await user.save();
-    const verificationMessage = `Dear ${user.firstName},\nYour verification code is ${verificationOTP}. Your code will expire in 15 Minutes.\nIf you did not request a code, Please ignore this message.\nThank you for using GharPaluwa.com ! ^_~`;
+    const verificationMessage = `Gharpaluwa: Your OTP (One-Time Password) is ${verificationOTP}. This code is valid for 15 minutes. Do not share it with anyone. Thank you for choosing Gharpaluwa.com.`;
     // Send the sms
     await SmsService.sendSMS(user.phone, verificationMessage);
-    return user; // Return the user or a success message if needed
   } catch (error) {
     throw new Error(error);
   }
@@ -200,7 +196,9 @@ export const sendPhoneVerification = async (userId) => {
 // Confirm phone verification
 export const verifyPhoneVerification = async (userId, otp) => {
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).select(
+      "+verificationOTP.otp +verificationOTP.expiration"
+    );
     if (!user) {
       throw new Error("User doesnot exist");
     }
@@ -219,7 +217,8 @@ export const verifyPhoneVerification = async (userId, otp) => {
     user.verificationOTP = undefined;
 
     // send welcome sms
-    const welcomeMessage = `Dear ${user.firstName},\nWelcome to GharPaluwa.com ! ^_~ Your phone number has been verified successfully.\nThank you for using GharPaluwa.com ! ^_~`;
+    const welcomeMessage = `Dear ${user.firstName}, Welcome to GharPaluwa.com! Your phone number has been verified successfully.\nThank you for using GharPaluwa.com! ^_~`;
+
     await SmsService.sendSMS(user.phone, welcomeMessage);
     await user.save();
   } catch (error) {
