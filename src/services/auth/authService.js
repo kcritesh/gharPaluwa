@@ -113,7 +113,6 @@ export const resetPasswordRequest = async (email) => {
     await user.save();
     // Send the email
     await EmailService.sendResetPasswordEmail(user.email, resetToken);
-    return "Reset password link sent";
   } catch (error) {
     throw new Error(error);
   }
@@ -129,8 +128,6 @@ export const verifyResetPassword = async (resetToken) => {
     if (!user) {
       throw new Error("Invalid or expired reset token");
     }
-    // Return the user or a success message if needed
-    return user;
   } catch (error) {
     // Handle the error and provide a more informative error message
     throw new Error(`Reset password verification failed: ${error.message}`);
