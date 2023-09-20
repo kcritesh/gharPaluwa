@@ -171,9 +171,9 @@ export const sendPhoneVerification = async (userId) => {
       throw new Error("User doesnot exist");
     }
     // if the phone is already verified
-    // if (user.isPhoneVerified) {
-    //   throw new Error("Phone already verified");
-    // }
+    if (user.isPhoneVerified) {
+      throw new Error("Phone already verified");
+    }
     // Generate a token
     const verificationOTP = SmsService.generateOTP();
     const verificationOTPExpiration = new Date();
