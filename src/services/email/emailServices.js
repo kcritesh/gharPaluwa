@@ -118,5 +118,5 @@ export const sendResetPasswordEmail = async (email, token) => {
 };
 
 const getPasswordResetLink = (token) => {
-  return `http://dashboard.gharpaluwa.com/reset-password?token=${token}`;
+  return `http://dashboard.gharpaluwa.com/reset-password?token=${token}?reset=true`;
 };
