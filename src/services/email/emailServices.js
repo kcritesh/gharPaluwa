@@ -77,7 +77,7 @@ export const sendVerificationEmail = async (email, token) => {
             display: inline-block;
             padding: 10px 20px;
             background-color: #007BFF;
-            color: white;
+            color: white !important;
             border-radius: 5px;
             text-decoration: none;
             margin-top: 20px;
@@ -93,9 +93,9 @@ export const sendVerificationEmail = async (email, token) => {
         <h1>Email Confirmation</h1>
         <p>Welcome to our platform! We're excited to have you on board.</p>
         <p>Please click the button below to confirm your email address:</p>
-        <button class="button" href="${getVerificationLink(
+        <a class="button" href="${getVerificationLink(
           token
-        )}">Confirm Your Email</button>
+        )}">Confirm Your Email</a>
     </div>
 </body>
 </html>
