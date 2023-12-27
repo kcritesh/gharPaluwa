@@ -10,6 +10,7 @@ import productRoutes from "./products/productRoutes.js";
 import userRoutes from "./user/userRoutes.js";
 import orderRoutes from "./orders/orderRoutes.js";
 import cartRoutes from "./cart/cartRoutes.js";
+import uploadRoutes from "./uploads/uploadRoutes.js";
 
 // Use the imported routes
 
@@ -23,5 +24,7 @@ router.use("/user", userRoutes);
 router.use("/orders", orderRoutes);
 
 router.use("/cart", cartRoutes);
+
+router.use("/putSignedUrl", uploadRoutes);
 
 export default router;
