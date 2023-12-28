@@ -9,9 +9,10 @@ import { s3Client } from "../../s3Client.js";
 
 // Generates the URL.
 export const getPresignedUrl = async (type, domain) => {
+  const objectKey = `${type}/${Date.now()}_${Math.random()}`;
   const bucketParams = {
     Bucket: `${domain}`,
-    Key: `${type}/${Date.now()}_${Math.random()}`,
+    Key: objectKey,
     ContentType: "application/octet-stream",
     ACL: "public-read",
   };
@@ -22,8 +23,9 @@ export const getPresignedUrl = async (type, domain) => {
       { expiresIn: 15 * 60 }
     ); // Adjustable expiration.
     console.log("URL:", url);
-    return url;
+    return { url, objectKey };
   } catch (err) {
     console.log("Error", err);
+    throw new Error(`Could not get signed URL: ${err.message}`);
   }
 };
