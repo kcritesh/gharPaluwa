@@ -9,7 +9,8 @@ import { s3Client } from "../../s3Client.js";
 
 // Generates the URL.
 export const getPresignedUrl = async (type, domain) => {
-  const objectKey = `${type}/${Date.now()}_${Math.random()}`;
+  const today = new Date().toISOString().split("T")[0];
+  const objectKey = `${type}/${today}/gharpaluwaImage_${Date.now()}_${Math.random().toFixed(3)}`;
   const bucketParams = {
     Bucket: `${domain}`,
     Key: objectKey,
