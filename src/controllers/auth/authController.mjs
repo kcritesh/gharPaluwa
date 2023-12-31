@@ -1,4 +1,4 @@
-import * as AuthService from "../../services/auth/authService.js";
+import * as AuthService from '../../services/auth/authService.mjs';
 
 export const register = async (req, res) => {
   const {
@@ -24,9 +24,9 @@ export const register = async (req, res) => {
       address,
       roles
     );
-    return res.status(200).json({ message: "User created successfully", user });
+    return res.status(200).json({ message: 'User created successfully', user });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message });
   }
 };
 
@@ -38,9 +38,9 @@ export const login = async (req, res) => {
     const accessToken = await AuthService.loginUser(email, password);
     return res
       .status(200)
-      .json({ message: "User logged in successfully", accessToken });
+      .json({ message: 'User logged in successfully', accessToken });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message });
   }
 };
 
@@ -51,9 +51,9 @@ export const verifyEmail = async (req, res) => {
     const user = await AuthService.verifyEmail(token);
     return res
       .status(200)
-      .json({ message: "Email verified successfully", user });
+      .json({ message: 'Email verified successfully', user });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    return res.status(400).json({ message: error.message });
   }
 };
 
@@ -64,7 +64,7 @@ export const resetPasswordRequest = async (req, res) => {
     await AuthService.resetPasswordRequest(email);
     return res
       .status(200)
-      .json({ message: "Reset password link sent", status: "sent" });
+      .json({ message: 'Reset password link sent', status: 'sent' });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -77,9 +77,9 @@ export const verifyResetPassword = async (req, res) => {
     await AuthService.verifyResetPassword(resetToken);
     return res
       .status(200)
-      .json({ message: "Reset password link verified", status: "verified" });
+      .json({ message: 'Reset password link verified', status: 'verified' });
   } catch (error) {
-    res.status(400).json({ message: error.message, status: "failed" });
+    res.status(400).json({ message: error.message, status: 'failed' });
   }
 };
 
@@ -88,7 +88,7 @@ export const resetPassword = async (req, res) => {
   try {
     const { resetToken, password, confirmPassword } = req.body;
     await AuthService.resetPassword(resetToken, password, confirmPassword);
-    return res.status(200).json({ message: "Password reset successfully" });
+    return res.status(200).json({ message: 'Password reset successfully' });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -101,7 +101,7 @@ export const sendPhoneVerification = async (req, res) => {
     await AuthService.sendPhoneVerification(userId);
     return res
       .status(200)
-      .json({ message: "Verification code sent", status: "sent" });
+      .json({ message: 'Verification code sent', status: 'sent' });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -115,7 +115,7 @@ export const verifyPhoneVerification = async (req, res) => {
     await AuthService.verifyPhoneVerification(userId, otp);
     return res
       .status(200)
-      .json({ message: "Phone verified successfully", status: "verified" });
+      .json({ message: 'Phone verified successfully', status: 'verified' });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

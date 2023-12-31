@@ -1,4 +1,4 @@
-import * as cartService from "../../services/cart/cartServices.js";
+import * as cartService from "../../services/cart/cartServices.mjs";
 
 // ================== Controller to add to cart ==================
 export async function addToCart(req, res) {

@@ -1,4 +1,5 @@
-import * as uploadService from "../../services/uploads/uploadService1.js";
+/* eslint-disable import/prefer-default-export */
+import * as uploadService from '../../services/uploads/uploadService1.mjs';
 
 const getSignedUrl = async (req, res) => {
   try {
@@ -7,11 +8,9 @@ const getSignedUrl = async (req, res) => {
       type,
       domain
     );
-
     res.json({ url, objectKey });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 

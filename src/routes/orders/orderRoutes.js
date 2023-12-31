@@ -1,13 +1,13 @@
-import express from "express";
+import express from 'express';
 const router = express.Router();
-import { authenticateToken } from "../../middleware/index.js";
+import { authenticateToken } from '../../middleware/index.js';
 import {
   createOrder,
   getOrdersByVendorId,
   getOrdersByCustomerId,
-} from "../../controllers/orders/orderControllers.js";
+} from '../../controllers/orders/orderControllers.mjs';
 
-router.post("/create", authenticateToken, createOrder);
-router.get("/view-orders/vendor", authenticateToken, getOrdersByVendorId);
-router.get("/view-orders/customer", authenticateToken, getOrdersByCustomerId);
+router.post('/create', authenticateToken, createOrder);
+router.get('/view-orders/vendor', authenticateToken, getOrdersByVendorId);
+router.get('/view-orders/customer', authenticateToken, getOrdersByCustomerId);
 export default router;

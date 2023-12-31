@@ -1,4 +1,4 @@
-import * as ProductService from "../../services/products/productService.js";
+import * as ProductService from "../../services/products/productService.mjs";
 
 export async function createProduct(req, res) {
   const { name, price, description, quantity } = req.body;

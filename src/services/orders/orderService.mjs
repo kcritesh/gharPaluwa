@@ -1,8 +1,8 @@
-import Product from "../../models/Product.js";
-import Order from "../../models/Orders.js";
-import User from "../../models/User.js";
+import Product from '../../models/Product.js';
+import Order from '../../models/Orders.js';
+import User from '../../models/User.js';
 
-import { sendOrderConfirmationEmailToCustomer } from "../email/emailServices.js";
+import { sendOrderConfirmationEmailToCustomer } from '../email/emailServices.mjs';
 
 export async function createOrder(customerId, orderItems) {
   try {
@@ -59,7 +59,7 @@ export async function updateOrderStatus(orderId, newStatus) {
     if (!updatedOrder) {
       throw new Error(`Order with ID ${orderId} not found.`);
     }
-    if (newStatus === "completed") {
+    if (newStatus === 'completed') {
       //   const customer = await User.findById(updatedOrder.customer);
       //   if(!customer) {
       //     throw new Error(`Customer with ID ${updatedOrder.customer} not found.`);
@@ -67,7 +67,7 @@ export async function updateOrderStatus(orderId, newStatus) {
       //   customer.totalOrders += 1;
       //   await customer.save();
     }
-    if (newStatus === "cancelled") {
+    if (newStatus === 'cancelled') {
       for (const item of updatedOrder.products) {
         const product = await Product.findById(item.product);
         if (!product) {
@@ -88,8 +88,8 @@ export async function getOrdersByCustomerId(customerId) {
     const orders = await Order.find({
       customer: customerId,
     }).populate(
-      "products.product customer",
-      "name price firstName lastName username email"
+      'products.product customer',
+      'name price firstName lastName username email'
     );
 
     const customerOrders = [];
@@ -118,8 +118,8 @@ export async function getOrdersByCustomerId(customerId) {
 export async function getOrdersByVendorId(vendorId) {
   try {
     const orders = await Order.find({
-      "products.vendorId": vendorId,
-    }).populate("customer", "firstName lastName username email"); // Populate customer details
+      'products.vendorId': vendorId,
+    }).populate('customer', 'firstName lastName username email'); // Populate customer details
 
     const vendorOrders = [];
 

@@ -1,9 +1,8 @@
-import Users from "../../models/User.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import * as EmailService from "../../services/email/emailServices.js";
-import * as SmsService from "../../services/sms/smsServices.js";
-import User from "../../models/User.js";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import * as EmailService from '../email/emailServices.mjs';
+import * as SmsService from '../sms/smsServices.mjs';
+import User from '../../models/User.js';
 
 export async function registerUser(
   username,
@@ -18,20 +17,20 @@ export async function registerUser(
 ) {
   try {
     // Check if user already exists
-    const existingUser = await Users.findOne({
+    const existingUser = await User.findOne({
       $or: [{ username }, { email }, { phone }],
     });
     if (existingUser) {
-      throw new Error("User with the same Email or Username already exists");
+      throw new Error('User with the same Email or Username already exists');
     }
     // Check if password and confirm password match
     if (password !== confirmPassword) {
-      throw new Error("Passwords do not match");
+      throw new Error('Passwords do not match');
     }
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
     // Create a new user
-    const newUser = new Users({
+    const newUser = new User({
       firstName,
       lastName,
       email,
@@ -55,19 +54,19 @@ export async function registerUser(
 export async function loginUser(email, password) {
   try {
     // Check if the user exists in the database
-    const user = await Users.findOne({ email }).select("+password");
+    const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
-      throw new Error("User doesnot exist");
+      throw new Error('User doesnot exist');
     }
     // Compare the provided password with the stored hashed password
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      throw new Error("Password doesnot match");
+      throw new Error('Password doesnot match');
     }
-    //jsonWebToken
-    const User = { username: user.username, userId: user._id };
-    const accessToken = jwt.sign(User, process.env.ACCESS_TOKEN_SECRET);
+    // jsonWebToken
+    const LoggedInUser = { username: user.username, userId: user.id };
+    const accessToken = jwt.sign(LoggedInUser, process.env.ACCESS_TOKEN_SECRET);
     // Login successful
     return accessToken;
   } catch (error) {
@@ -87,7 +86,7 @@ export const verifyEmail = async (token) => {
     );
 
     if (!user) {
-      throw new Error({ message: "User doesnot exist" });
+      throw new Error({ message: 'User doesnot exist' });
     }
     return user;
   } catch (error) {
@@ -100,7 +99,7 @@ export const resetPasswordRequest = async (email) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      throw new Error("User doesnot exist");
+      throw new Error('User doesnot exist');
     }
     // Generate a token
     const resetToken = EmailService.generateToken(email);
@@ -122,11 +121,11 @@ export const resetPasswordRequest = async (email) => {
 export const verifyResetPassword = async (resetToken) => {
   try {
     const user = await User.findOne({
-      "resetToken.token": resetToken,
-      "resetToken.expiration": { $gt: Date.now() },
+      'resetToken.token': resetToken,
+      'resetToken.expiration': { $gt: Date.now() },
     });
     if (!user) {
-      throw new Error("Invalid or expired reset token");
+      throw new Error('Invalid or expired reset token');
     }
   } catch (error) {
     // Handle the error and provide a more informative error message
@@ -138,21 +137,21 @@ export const verifyResetPassword = async (resetToken) => {
 export const resetPassword = async (resetToken, password, confirmPassword) => {
   try {
     if (password !== confirmPassword) {
-      throw new Error("Password and confirm password doesnot match");
+      throw new Error('Password and confirm password doesnot match');
     }
     const user = await User.findOne({
-      "resetToken.token": resetToken,
-      "resetToken.expiration": { $gt: Date.now() },
-    }).select("password");
+      'resetToken.token': resetToken,
+      'resetToken.expiration': { $gt: Date.now() },
+    }).select('password');
     if (!user) {
-      throw new Error("Invalid or expired reset token");
+      throw new Error('Invalid or expired reset token');
     }
     // Hash the new password
     const hashedPassword = await bcrypt.hash(password, 10);
     // Check if the new password is the same as the old password
     const isSamePassword = await bcrypt.compare(password, user.password);
     if (isSamePassword) {
-      throw new Error("New password cannot be the same as the old password");
+      throw new Error('New password cannot be the same as the old password');
     }
     // Update the user's password
     user.password = hashedPassword;
@@ -168,11 +167,11 @@ export const sendPhoneVerification = async (userId) => {
   try {
     const user = await User.findById(userId);
     if (!user) {
-      throw new Error("User doesnot exist");
+      throw new Error('User doesnot exist');
     }
     // if the phone is already verified
     if (user.isPhoneVerified) {
-      throw new Error("Phone already verified");
+      throw new Error('Phone already verified');
     }
     // Generate a token
     const verificationOTP = SmsService.generateOTP();
@@ -197,19 +196,19 @@ export const sendPhoneVerification = async (userId) => {
 export const verifyPhoneVerification = async (userId, otp) => {
   try {
     const user = await User.findById(userId).select(
-      "+verificationOTP.otp +verificationOTP.expiration"
+      '+verificationOTP.otp +verificationOTP.expiration'
     );
     if (!user) {
-      throw new Error("User doesnot exist");
+      throw new Error('User doesnot exist');
     }
     // Check if the OTP is expired
     if (user.verificationOTP.expiration < Date.now()) {
-      throw new Error("OTP expired! Please request a new one.");
+      throw new Error('OTP expired! Please request a new one.');
     }
 
     // Check if the OTP is the same as the one in the database
     if (user.verificationOTP.otp !== otp) {
-      throw new Error("Invalid OTP");
+      throw new Error('Invalid OTP');
     }
 
     // Update the user's phone verification status
