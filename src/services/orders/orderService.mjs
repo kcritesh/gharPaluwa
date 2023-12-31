@@ -1,33 +1,40 @@
 import Product from '../../models/Product.js';
 import Order from '../../models/Orders.js';
-import User from '../../models/User.js';
 
 import { sendOrderConfirmationEmailToCustomer } from '../email/emailServices.mjs';
 
 export async function createOrder(customerId, orderItems) {
   try {
-    // Calculate the total price based on order items
-    let totalPrice = 0;
+    const totalPrice = 0;
 
-    for (const item of orderItems) {
-      const product = await Product.findById(item.productId);
-      if (!product) {
-        throw new Error(`Product with ID ${item.productId} not found.`);
-      }
-      if (product.quantity < item.quantity) {
-        throw new Error(
-          `Product with ID ${item.productId} does not have enough stock.`
-        );
-      }
-      totalPrice += product.price * item.quantity;
-      item.price = product.price;
-      item.name = product.name;
-      item.vendorId = product.userId;
+    await Promise.all(
+      orderItems.map(async (originalItem) => {
+        const product = await Product.findById(originalItem.productId);
 
-      // Update the stock of the product
-      product.quantity -= item.quantity;
-      //   await product.save();
-    }
+        if (!product) {
+          throw new Error(
+            `Product with ID ${originalItem.productId} not found.`
+          );
+        }
+
+        if (product.quantity < originalItem.quantity) {
+          throw new Error(
+            `Product with ID ${originalItem.productId} does not have enough stock.`
+          );
+        }
+
+        const item = {
+          ...originalItem,
+          price: product.price,
+          name: product.name,
+          vendorId: product.userId,
+        };
+
+        // Update the stock of the product
+        product.quantity -= item.quantity;
+        await product.save();
+      })
+    );
 
     const order = new Order({
       customer: customerId,
@@ -45,7 +52,7 @@ export async function createOrder(customerId, orderItems) {
     sendOrderConfirmationEmailToCustomer(customerId, savedOrder);
     return savedOrder;
   } catch (error) {
-    throw error;
+    throw new Error('Failed to create order. Please try again.');
   }
 }
 
