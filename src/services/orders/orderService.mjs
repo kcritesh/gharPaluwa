@@ -75,14 +75,16 @@ export async function updateOrderStatus(orderId, newStatus) {
       //   await customer.save();
     }
     if (newStatus === 'cancelled') {
-      for (const item of updatedOrder.products) {
-        const product = await Product.findById(item.product);
-        if (!product) {
-          throw new Error(`Product with ID ${item.product} not found.`);
-        }
-        product.quantity += item.quantity;
-        await product.save();
-      }
+      Promise.all(
+        updatedOrder?.products.map(async (item) => {
+          const product = await Product.findById(item.product);
+          if (!product) {
+            throw new Error(`Product with ID ${item.product} not found.`);
+          }
+          product.quantity += item.quantity;
+          await product.save();
+        })
+      );
     }
     return updatedOrder;
   } catch (error) {
@@ -103,7 +105,7 @@ export async function getOrdersByCustomerId(customerId) {
 
     orders.forEach((order) => {
       const orderWithCustomerProducts = {
-        orderId: order._id,
+        orderId: order.id,
         products: order.products,
         totalPrice: order.totalPrice,
         createdAt: order.createdAt,
@@ -113,7 +115,7 @@ export async function getOrdersByCustomerId(customerId) {
     });
 
     const result = {
-      customerOrders: customerOrders,
+      customerOrders,
     };
 
     return result;
@@ -132,7 +134,7 @@ export async function getOrdersByVendorId(vendorId) {
 
     orders.forEach((order) => {
       const orderWithVendorProducts = {
-        orderId: order._id,
+        orderId: order.id,
         customer: order.customer,
         products: order.products,
         totalPrice: order.totalPrice,
@@ -143,7 +145,7 @@ export async function getOrdersByVendorId(vendorId) {
     });
 
     const result = {
-      vendorOrders: vendorOrders,
+      vendorOrders,
     };
 
     return result;

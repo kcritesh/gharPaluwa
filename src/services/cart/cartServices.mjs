@@ -27,7 +27,7 @@ export async function addToCart(userId, productId, quantity) {
       // If cart doesn't exist, create a new cart and add the item
       const newCart = new Cart({
         user: userId,
-        items: [{ product: productId, quantity: quantity }],
+        items: [{ product: productId, quantity }],
       });
       await newCart.save();
       return newCart;
