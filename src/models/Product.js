@@ -1,6 +1,13 @@
 // Product.js
 
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+
+const ImagesSchema = new mongoose.Schema({
+  imageURL: {
+    type: String,
+    required: true,
+  },
+});
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -18,9 +25,13 @@ const productSchema = new mongoose.Schema({
   imgUrl: {
     type: String,
   },
+  images: {
+    type: [ImagesSchema],
+    default: [],
+  },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Users",
+    ref: 'User',
     required: true,
   },
   username: {
@@ -44,6 +55,6 @@ const productSchema = new mongoose.Schema({
 
 productSchema.index({ userId: 1 });
 
-const Product = mongoose.model("Product", productSchema);
+const Product = mongoose.model('Product', productSchema);
 
 export default Product;
