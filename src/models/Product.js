@@ -10,6 +10,11 @@ const ImagesSchema = new mongoose.Schema({
 });
 
 const productSchema = new mongoose.Schema({
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    default: null,
+  },
   name: {
     type: String,
     required: true,
@@ -50,6 +55,54 @@ const productSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now,
+  },
+  keyWords: {
+    type: [String],
+    default: [],
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
+  metaDescription: {
+    type: String,
+    default: '',
+  },
+  metaTitle: {
+    type: String,
+    default: '',
+  },
+  metaKeywords: {
+    type: String,
+    default: '',
+  },
+  isFeatured: {
+    type: Boolean,
+    default: false,
+  },
+  isPopular: {
+    type: Boolean,
+    default: false,
+  },
+  isBestSeller: {
+    type: Boolean,
+    default: false,
+  },
+  isDiscounted: {
+    type: Boolean,
+    default: false,
+  },
+  discount: {
+    type: Number,
+    default: 0,
+  },
+  discountPrice: {
+    type: Number,
+    default: 0,
+  },
+  isOutOfStock: {
+    type: Boolean,
+    default: false,
   },
 });
 
