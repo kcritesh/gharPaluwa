@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 import { S3 } from '@aws-sdk/client-s3';
 import dotenv from 'dotenv';
 

@@ -61,7 +61,7 @@ export async function deleteCategory(id) {
     throw new Error('Category not found');
   }
   const subcategories = await Category.find({
-    parentCategory: categoryToDelete._id,
+    parentCategory: categoryToDelete.id,
   });
   if (subcategories.length) {
     throw new Error('Category has subcategories! Please delete them first');

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import express, { json } from "express";
 
 import * as dotenv from "dotenv";

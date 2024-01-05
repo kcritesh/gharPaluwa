@@ -116,7 +116,7 @@ export const deleteCategory = async (req, res) => {
 
 export const updateCategory = async (req, res) => {
   try {
-    const id = req.params.id;
+    const {id} = req.params;
     const { name, description } = req.body;
     const category = await categoryService.updateCategory(
       id,

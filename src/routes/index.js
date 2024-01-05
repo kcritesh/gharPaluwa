@@ -1,8 +1,7 @@
 import express from "express";
-const router = express.Router();
 
 // ===========Import the relevant middleware================
-import { authenticateToken } from "../middleware/index.js";
+// import { authenticateToken } from "../middleware/index.js";
 
 // Import the routes from other files
 import authRoutes from "./auth/authRoutes.js";
@@ -14,6 +13,7 @@ import uploadRoutes from "./uploads/uploadRoutes.js";
 import categoryRoutes from "./category/categoryRoutes.js";
 
 // Use the imported routes
+const router = express.Router();
 
 router.use("/auth", authRoutes); // localhost:9000/api/auth/register or localhost:9000/api/auth/login
 

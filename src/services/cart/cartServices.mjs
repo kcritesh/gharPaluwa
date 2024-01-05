@@ -1,5 +1,18 @@
-import Cart from "../../models/Cart.js";
-import Product from "../../models/Product.js";
+import Cart from '../../models/Cart.js';
+import Product from '../../models/Product.js';
+
+// ===========Helper function to get the total quantity of a product in the cart==============
+async function getTotalQuantityInCart(userId, productId) {
+  const cart = await Cart.findOne({ user: userId });
+
+  if (!cart) {
+    return 0;
+  }
+
+  const productItem = cart.items.find((item) => item.product.equals(productId));
+
+  return productItem ? productItem.quantity : 0;
+}
 
 // ================== Helper function to add the item to cart ==================
 export async function addToCart(userId, productId, quantity) {
@@ -43,7 +56,7 @@ export async function addToCart(userId, productId, quantity) {
       existingItem.quantity += quantity;
     } else {
       // If the product is not in the cart, add a new item
-      cart.items.push({ product: productId, quantity: quantity });
+      cart.items.push({ product: productId, quantity });
     }
 
     await cart.save();
@@ -53,30 +66,17 @@ export async function addToCart(userId, productId, quantity) {
   }
 }
 
-// ===========Helper function to get the total quantity of a product in the cart==============
-async function getTotalQuantityInCart(userId, productId) {
-  const cart = await Cart.findOne({ user: userId });
-
-  if (!cart) {
-    return 0;
-  }
-
-  const productItem = cart.items.find((item) => item.product.equals(productId));
-
-  return productItem ? productItem.quantity : 0;
-}
-
 export async function getCartByCustomerId(customerId) {
   try {
     const cart = await Cart.findOne({ user: customerId }).populate({
-      path: "items.product",
-      select: "name price",
+      path: 'items.product',
+      select: 'name price',
     });
 
     return cart || null; // Return null if no cart is found
   } catch (error) {
-    console.error("Error in getCartByCustomerId:", error.message);
-    throw error;
+    // console.error("Error in getCartByCustomerId:", error.message);
+    throw new Error(error);
   }
 }
 

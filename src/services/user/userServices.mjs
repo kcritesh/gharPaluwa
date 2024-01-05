@@ -17,4 +17,5 @@ const getUserDetails = async (userId) => {
   }
 };
 
+// eslint-disable-next-line import/prefer-default-export
 export { getUserDetails };

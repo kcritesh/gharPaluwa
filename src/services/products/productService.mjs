@@ -1,5 +1,5 @@
 import Product from '../../models/Product.js';
-import { uploadImage } from '../cloudinary/ImageUploadService.mjs';
+import uploadImage from '../cloudinary/ImageUploadService.mjs';
 
 export async function createProduct(
   name,
@@ -74,7 +74,7 @@ export async function updateProduct(
 
     return product;
   } catch (error) {
-    throw error;
+    throw new Error(error);
   }
 }
 
@@ -109,7 +109,7 @@ export async function getAllProductsOfVendor(userId) {
   }
 }
 
-//========== Function to get all products of all vendors========
+// ========== Function to get all products of all vendors========
 export async function getProductsByQuery(searchQuery) {
   try {
     let query = {}; // Empty query by default
@@ -152,6 +152,6 @@ export async function deleteProduct(id, userId) {
     await Product.findByIdAndDelete(id);
     return product;
   } catch (error) {
-    throw error; // Re-throw the original error
+    throw new Error(error); // Re-throw the original error
   }
 }

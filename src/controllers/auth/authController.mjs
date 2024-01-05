@@ -57,7 +57,7 @@ export const verifyEmail = async (req, res) => {
   }
 };
 
-//for reset password request
+// for reset password request
 export const resetPasswordRequest = async (req, res) => {
   try {
     const { email } = req.body;

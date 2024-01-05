@@ -1,10 +1,10 @@
-//SCHEMAS
 // Schema is a class that allows us to represent a collection of fields
-import { Schema, model } from "mongoose";
-import isEmail from "validator/lib/isEmail.js";
-import validator from "validator";
+import { Schema, model } from 'mongoose';
+import isEmail from 'validator/lib/isEmail.js';
+import validator from 'validator';
+
 const { isMobilePhone } = validator;
-const validRoles = ["seller", "buyer"];
+const validRoles = ['seller', 'buyer'];
 
 const userSchema = new Schema({
   firstName: {
@@ -26,7 +26,7 @@ const userSchema = new Schema({
     type: String,
     required: true,
     unique: true,
-    validate: [isEmail, "please enter valid email"],
+    validate: [isEmail, 'please enter valid email'],
   },
 
   phone: {
@@ -34,12 +34,10 @@ const userSchema = new Schema({
     required: true,
     unique: true,
     validate: {
-      validator: (value) => {
+      validator: (value) =>
         // Example: Validate against phone numbers in the United States
-        console.log("value", value);
-        return isMobilePhone(value, "ne-NP");
-      },
-      message: "Please enter a valid phone number",
+        isMobilePhone(value, 'ne-NP'),
+      message: 'Please enter a valid phone number',
     },
   },
 
@@ -52,11 +50,11 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true,
-    minlength: [6, "Minimun password length is 6"],
+    minlength: [6, 'Minimun password length is 6'],
     select: false,
     match: [
       /^(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{6,}$/,
-      "Password must have uppercase, lowercase and special character.",
+      'Password must have uppercase, lowercase and special character.',
     ],
   },
 
@@ -106,4 +104,4 @@ const userSchema = new Schema({
 userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ username: 1 }, { unique: true });
 
-export default model("Users", userSchema);
+export default model('Users', userSchema);

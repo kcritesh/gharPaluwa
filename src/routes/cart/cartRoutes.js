@@ -1,5 +1,4 @@
 import express from 'express';
-const router = express.Router();
 import { authenticateToken } from '../../middleware/index.js';
 import {
   addToCart,
@@ -8,6 +7,8 @@ import {
   removeQuantityFromCart,
   clearCart,
 } from '../../controllers/cart/cartControllers.mjs';
+
+const router = express.Router();
 
 router.post('/add-to-cart', authenticateToken, addToCart);
 router.get('/get-cart', authenticateToken, getCartByCustomerId);

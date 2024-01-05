@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import * as dotenv from "dotenv";
+
 dotenv.config();
 
 cloudinary.config({
@@ -8,7 +9,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function uploadImage(imageUrl) {
+export default async function uploadImage(imageUrl) {
   try {
     // Upload the image to Cloudinary
     const result = await cloudinary.uploader.upload(imageUrl);
