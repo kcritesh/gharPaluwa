@@ -1,4 +1,4 @@
-import * as OrderServices from "../../services/orders/orderService.js";
+import * as OrderServices from "../../services/orders/orderService.mjs";
 
 export async function createOrder(req, res) {
   const { orderItems } = req.body;

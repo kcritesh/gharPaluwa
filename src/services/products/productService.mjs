@@ -1,5 +1,5 @@
-import Product from "../../models/Product.js";
-import { uploadImage } from "../cloudinary/ImageUploadService.js";
+import Product from '../../models/Product.js';
+import uploadImage from '../cloudinary/ImageUploadService.mjs';
 
 export async function createProduct(
   name,
@@ -13,7 +13,7 @@ export async function createProduct(
   try {
     const existingProduct = await Product.findOne({ name });
     if (existingProduct) {
-      throw new Error("Product with the same name already exists");
+      throw new Error('Product with the same name already exists');
     }
 
     let imgUrl = null; // Initialize imgUrl with null
@@ -52,10 +52,10 @@ export async function updateProduct(
   try {
     const product = await Product.findById(id);
     if (!product) {
-      throw new Error("Product not found");
+      throw new Error('Product not found');
     }
     if (product.userId.toString() !== userId) {
-      throw new Error("You are not authorized to update this product.");
+      throw new Error('You are not authorized to update this product.');
     }
 
     if (img) {
@@ -74,7 +74,7 @@ export async function updateProduct(
 
     return product;
   } catch (error) {
-    throw error;
+    throw new Error(error);
   }
 }
 
@@ -109,14 +109,14 @@ export async function getAllProductsOfVendor(userId) {
   }
 }
 
-//========== Function to get all products of all vendors========
+// ========== Function to get all products of all vendors========
 export async function getProductsByQuery(searchQuery) {
   try {
     let query = {}; // Empty query by default
 
     if (searchQuery) {
       // If a search query is provided, create a regular expression to perform a case-insensitive search
-      const searchRegex = new RegExp(searchQuery, "i");
+      const searchRegex = new RegExp(searchQuery, 'i');
       query = { name: searchRegex }; // Modify the field name ('name' in this case) according to your data model
     }
 
@@ -146,12 +146,12 @@ export async function deleteProduct(id, userId) {
     }
 
     if (product.userId.toString() !== userId) {
-      throw new Error("You are not authorized to delete this product.");
+      throw new Error('You are not authorized to delete this product.');
     }
 
     await Product.findByIdAndDelete(id);
     return product;
   } catch (error) {
-    throw error; // Re-throw the original error
+    throw new Error(error); // Re-throw the original error
   }
 }

@@ -1,1 +1,2 @@
-export { default } from "./connection.js";
+// eslint-disable-next-line no-restricted-exports
+export { default } from './connection.js';

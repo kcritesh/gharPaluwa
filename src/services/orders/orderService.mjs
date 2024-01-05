@@ -1,33 +1,40 @@
-import Product from "../../models/Product.js";
-import Order from "../../models/Orders.js";
-import User from "../../models/User.js";
+import Product from '../../models/Product.js';
+import Order from '../../models/Orders.js';
 
-import { sendOrderConfirmationEmailToCustomer } from "../email/emailServices.js";
+import { sendOrderConfirmationEmailToCustomer } from '../email/emailServices.mjs';
 
 export async function createOrder(customerId, orderItems) {
   try {
-    // Calculate the total price based on order items
-    let totalPrice = 0;
+    const totalPrice = 0;
 
-    for (const item of orderItems) {
-      const product = await Product.findById(item.productId);
-      if (!product) {
-        throw new Error(`Product with ID ${item.productId} not found.`);
-      }
-      if (product.quantity < item.quantity) {
-        throw new Error(
-          `Product with ID ${item.productId} does not have enough stock.`
-        );
-      }
-      totalPrice += product.price * item.quantity;
-      item.price = product.price;
-      item.name = product.name;
-      item.vendorId = product.userId;
+    await Promise.all(
+      orderItems.map(async (originalItem) => {
+        const product = await Product.findById(originalItem.productId);
 
-      // Update the stock of the product
-      product.quantity -= item.quantity;
-      //   await product.save();
-    }
+        if (!product) {
+          throw new Error(
+            `Product with ID ${originalItem.productId} not found.`
+          );
+        }
+
+        if (product.quantity < originalItem.quantity) {
+          throw new Error(
+            `Product with ID ${originalItem.productId} does not have enough stock.`
+          );
+        }
+
+        const item = {
+          ...originalItem,
+          price: product.price,
+          name: product.name,
+          vendorId: product.userId,
+        };
+
+        // Update the stock of the product
+        product.quantity -= item.quantity;
+        await product.save();
+      })
+    );
 
     const order = new Order({
       customer: customerId,
@@ -45,7 +52,7 @@ export async function createOrder(customerId, orderItems) {
     sendOrderConfirmationEmailToCustomer(customerId, savedOrder);
     return savedOrder;
   } catch (error) {
-    throw error;
+    throw new Error('Failed to create order. Please try again.');
   }
 }
 
@@ -59,7 +66,7 @@ export async function updateOrderStatus(orderId, newStatus) {
     if (!updatedOrder) {
       throw new Error(`Order with ID ${orderId} not found.`);
     }
-    if (newStatus === "completed") {
+    if (newStatus === 'completed') {
       //   const customer = await User.findById(updatedOrder.customer);
       //   if(!customer) {
       //     throw new Error(`Customer with ID ${updatedOrder.customer} not found.`);
@@ -67,15 +74,17 @@ export async function updateOrderStatus(orderId, newStatus) {
       //   customer.totalOrders += 1;
       //   await customer.save();
     }
-    if (newStatus === "cancelled") {
-      for (const item of updatedOrder.products) {
-        const product = await Product.findById(item.product);
-        if (!product) {
-          throw new Error(`Product with ID ${item.product} not found.`);
-        }
-        product.quantity += item.quantity;
-        await product.save();
-      }
+    if (newStatus === 'cancelled') {
+      Promise.all(
+        updatedOrder?.products.map(async (item) => {
+          const product = await Product.findById(item.product);
+          if (!product) {
+            throw new Error(`Product with ID ${item.product} not found.`);
+          }
+          product.quantity += item.quantity;
+          await product.save();
+        })
+      );
     }
     return updatedOrder;
   } catch (error) {
@@ -88,15 +97,15 @@ export async function getOrdersByCustomerId(customerId) {
     const orders = await Order.find({
       customer: customerId,
     }).populate(
-      "products.product customer",
-      "name price firstName lastName username email"
+      'products.product customer',
+      'name price firstName lastName username email'
     );
 
     const customerOrders = [];
 
     orders.forEach((order) => {
       const orderWithCustomerProducts = {
-        orderId: order._id,
+        orderId: order.id,
         products: order.products,
         totalPrice: order.totalPrice,
         createdAt: order.createdAt,
@@ -106,7 +115,7 @@ export async function getOrdersByCustomerId(customerId) {
     });
 
     const result = {
-      customerOrders: customerOrders,
+      customerOrders,
     };
 
     return result;
@@ -118,14 +127,14 @@ export async function getOrdersByCustomerId(customerId) {
 export async function getOrdersByVendorId(vendorId) {
   try {
     const orders = await Order.find({
-      "products.vendorId": vendorId,
-    }).populate("customer", "firstName lastName username email"); // Populate customer details
+      'products.vendorId': vendorId,
+    }).populate('customer', 'firstName lastName username email'); // Populate customer details
 
     const vendorOrders = [];
 
     orders.forEach((order) => {
       const orderWithVendorProducts = {
-        orderId: order._id,
+        orderId: order.id,
         customer: order.customer,
         products: order.products,
         totalPrice: order.totalPrice,
@@ -136,7 +145,7 @@ export async function getOrdersByVendorId(vendorId) {
     });
 
     const result = {
-      vendorOrders: vendorOrders,
+      vendorOrders,
     };
 
     return result;

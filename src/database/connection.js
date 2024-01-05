@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { connect } from "mongoose";
 
 const connectDb = (url) => {

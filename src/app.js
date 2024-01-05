@@ -1,12 +1,14 @@
+/* eslint-disable no-console */
 import express, { json } from "express";
 
-import connectDb from "./database/index.js";
-import cors from "cors";
 import * as dotenv from "dotenv";
+import cors from "cors";
+import connectDb from "./database/index.js";
+import rootRoutes from "./routes/index.js";
+
 dotenv.config();
 
 // Importing the routes
-import rootRoutes from "./routes/index.js";
 
 const app = express();
 const port = process.env.PORT || 9000;
@@ -20,7 +22,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to the API Gharpaluwa");
 });
 
-app.use("*", (req, res, next) => {
+app.use("*", (req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
