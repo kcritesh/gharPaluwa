@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema({
   customer: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Users", // Reference to the user who placed the order (customer)
+    ref: "User", // Reference to the user who placed the order (customer)
     required: true,
   },
   products: [
