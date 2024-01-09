@@ -8,7 +8,8 @@ export async function createProduct(
   quantity,
   img,
   userId,
-  username
+  username,
+  categoryId
 ) {
   try {
     const existingProduct = await Product.findOne({ name });
@@ -30,6 +31,7 @@ export async function createProduct(
       imgUrl,
       userId,
       username,
+      categoryId
     });
 
     await product.save();

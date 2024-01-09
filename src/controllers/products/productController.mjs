@@ -1,7 +1,7 @@
 import * as ProductService from "../../services/products/productService.mjs";
 
 export async function createProduct(req, res) {
-  const { name, price, description, quantity } = req.body;
+  const { name, price, description, quantity, categoryId } = req.body;
   const { username, userId } = req.User; // from the authenticateToken middleware
 
   let imagePath = null; // Initialize imagePath with null
@@ -17,7 +17,8 @@ export async function createProduct(req, res) {
       quantity || 0,
       imagePath,
       userId,
-      username
+      username,
+      categoryId
     );
     res.status(201).json({ message: "Product created successfully", product });
   } catch (error) {
