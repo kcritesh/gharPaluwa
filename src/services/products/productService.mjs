@@ -31,7 +31,7 @@ export async function createProduct(
       imgUrl,
       userId,
       username,
-      categoryId
+      categoryId,
     });
 
     await product.save();
@@ -42,39 +42,52 @@ export async function createProduct(
   }
 }
 
-export async function updateProduct(
+export async function updateProduct({
   id,
   name,
   price,
   description,
   quantity,
   img,
-  userId
-) {
+  userId,
+  categoryId,
+}) {
   try {
+    
     const product = await Product.findById(id);
     if (!product) {
       throw new Error('Product not found');
     }
+
     if (product.userId.toString() !== userId) {
       throw new Error('You are not authorized to update this product.');
     }
 
+    let imgUrl;
+
     if (img) {
-      const imgUrl = await uploadImage(img);
-      product.imgUrl = imgUrl;
+      imgUrl = await uploadImage(img);
     }
 
-    product.name = name;
-    product.price = price;
-    product.description = description;
-    if (quantity) {
-      product.quantity = quantity;
+    const updateFields = {
+      ...(img && { imgUrl }),
+      ...(name && { name }),
+      ...(price && { price }),
+      ...(description && { description }),
+      ...(quantity && { quantity }),
+      ...(categoryId && { categoryId }),
+    };
+
+    const updatedProduct = await Product.findByIdAndUpdate(id, updateFields, {
+      new: true, // Return the updated document
+      runValidators: true, // Run validators for update operations
+    });
+
+    if (!updatedProduct) {
+      throw new Error('Failed to update product');
     }
 
-    await product.save();
-
-    return product;
+    return updatedProduct;
   } catch (error) {
     throw new Error(error);
   }
