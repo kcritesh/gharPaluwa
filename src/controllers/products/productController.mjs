@@ -1,21 +1,22 @@
 import * as ProductService from '../../services/products/productService.mjs';
 
 export async function createProduct(req, res) {
-  const { name, price, description, quantity, categoryId } = req.body;
+  const { name, price, description, quantity, categoryId, mainImg } = req.body;
   const { username, userId } = req.User; // from the authenticateToken middleware
 
-  let imagePath = null; // Initialize imagePath with null
+  // let imagePath = null; // Initialize imagePath with null
 
-  if (req.file) {
-    imagePath = req.file.path; // Set imagePath if a file was uploaded
-  }
+  // if (req.file) {
+  //   imagePath = req.file.path; // Set imagePath if a file was uploaded
+  // }
   try {
     const product = await ProductService.createProduct(
       name,
       price,
       description,
       quantity || 0,
-      imagePath,
+      // imagePath,
+      mainImg,
       userId,
       username,
       categoryId

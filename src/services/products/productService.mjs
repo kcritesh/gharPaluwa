@@ -6,7 +6,7 @@ export async function createProduct(
   price,
   description,
   quantity,
-  img,
+  mainImg,
   userId,
   username,
   categoryId
@@ -17,24 +17,26 @@ export async function createProduct(
       throw new Error('Product with the same name already exists');
     }
 
-    let imgUrl = null; // Initialize imgUrl with null
+    // let imgUrl = null; // Initialize imgUrl with null
 
-    if (img) {
-      imgUrl = await uploadImage(img);
-    }
+    // if (img) {
+    //   imgUrl = await uploadImage(img);
+    // }
+    const imgUrl = `${process.env.CDN_ENPOINT}`;
 
     const product = new Product({
       name,
       price,
       description,
       quantity,
-      imgUrl,
+      imgUrl: mainImg,
       userId,
       username,
       categoryId,
     });
 
     await product.save();
+    product.imgUrl = `${process.env.CDN_ENPOINT}/${product.imgUrl}`;
 
     return product;
   } catch (error) {
@@ -53,7 +55,6 @@ export async function updateProduct({
   categoryId,
 }) {
   try {
-    
     const product = await Product.findById(id);
     if (!product) {
       throw new Error('Product not found');
@@ -103,6 +104,13 @@ export async function getAllProducts(pageNumber, pageSize) {
       .sort({ createdAt: -1 }) // Sort in descending order (latest first)
       .skip(offset)
       .limit(pageSize);
+
+    products.forEach((product) => {
+      if (product.imgUrl && product.imgUrl.split('/')[0] === 'images') {
+        // eslint-disable-next-line no-param-reassign
+        product.imgUrl = `${process.env.CDN_ENPOINT}/${product.imgUrl}`;
+      }
+    });
 
     return {
       products,

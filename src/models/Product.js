@@ -76,6 +76,14 @@ const productSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  ogImage: {
+    type: String,
+    default: '',
+  },
+  ogUrl: {
+    type: String,
+    default: '',
+  },
   isFeatured: {
     type: Boolean,
     default: false,
