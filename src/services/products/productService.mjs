@@ -22,7 +22,7 @@ export async function createProduct(
     // if (img) {
     //   imgUrl = await uploadImage(img);
     // }
-    const imgUrl = `${process.env.CDN_ENPOINT}`;
+    // const imgUrl = `${process.env.CDN_ENPOINT}`;
 
     const product = new Product({
       name,
@@ -36,9 +36,11 @@ export async function createProduct(
     });
 
     await product.save();
-    product.imgUrl = `${process.env.CDN_ENPOINT}/${product.imgUrl}`;
+    const savedProduct = await Product.findById(product.id).select('-reviews');
 
-    return product;
+    savedProduct.imgUrl = `${process.env.CDN_ENPOINT}/${savedProduct.imgUrl}`;
+
+    return savedProduct;
   } catch (error) {
     throw new Error(error);
   }
@@ -50,7 +52,7 @@ export async function updateProduct({
   price,
   description,
   quantity,
-  img,
+  imgUrl,
   userId,
   categoryId,
 }) {
@@ -64,14 +66,14 @@ export async function updateProduct({
       throw new Error('You are not authorized to update this product.');
     }
 
-    let imgUrl;
+    // let imgUrl;
 
-    if (img) {
-      imgUrl = await uploadImage(img);
-    }
+    // if (img) {
+    //   imgUrl = await uploadImage(img);
+    // }
 
     const updateFields = {
-      ...(img && { imgUrl }),
+      ...(imgUrl && { imgUrl }),
       ...(name && { name }),
       ...(price && { price }),
       ...(description && { description }),

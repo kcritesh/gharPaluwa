@@ -84,7 +84,18 @@ export async function updateProduct(req, res) {
   try {
     const { id } = req.params;
     const { userId } = req.User;
-    const { name, price, description, quantity, categoryId } = req.body;
+    const {
+      name,
+      price,
+      description,
+      quantity,
+      categoryId,
+      metaDescription,
+      metaTitle,
+      metaKeywords,
+      ogImage,
+      ogUrl,
+    } = req.body;
 
     let imagePath = null; // Initialize imagePath with null
 
@@ -101,6 +112,11 @@ export async function updateProduct(req, res) {
       imagePath,
       userId,
       categoryId,
+      metaDescription,
+      metaTitle,
+      metaKeywords,
+      ogImage,
+      ogUrl,
     });
 
     res.status(200).json({ message: 'Product updated successfully', product });
