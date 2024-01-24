@@ -1,5 +1,8 @@
 import Product from '../../models/Product.js';
-import uploadImage from '../cloudinary/ImageUploadService.mjs';
+// import uploadImage from '../cloudinary/ImageUploadService.mjs';
+
+const primaryProductFields =
+  'name price description quantity imgUrl categoryId';
 
 export async function createProduct(
   name,
@@ -33,7 +36,7 @@ export async function createProduct(
       userId,
       username,
       categoryId,
-    });
+    }).select(primaryProductFields);
 
     await product.save();
     const savedProduct = await Product.findById(product.id).select('-reviews');
@@ -84,7 +87,7 @@ export async function updateProduct({
     const updatedProduct = await Product.findByIdAndUpdate(id, updateFields, {
       new: true, // Return the updated document
       runValidators: true, // Run validators for update operations
-    });
+    }).select(primaryProductFields);
 
     if (!updatedProduct) {
       throw new Error('Failed to update product');
