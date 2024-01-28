@@ -1,4 +1,5 @@
 import Product from '../../models/Product.js';
+import { updateImgUrl } from '../../utils/Image.js';
 // import uploadImage from '../cloudinary/ImageUploadService.mjs';
 
 const primaryProductFields =
@@ -108,14 +109,12 @@ export async function getAllProducts(pageNumber, pageSize) {
     const products = await Product.find()
       .sort({ createdAt: -1 }) // Sort in descending order (latest first)
       .skip(offset)
-      .limit(pageSize);
+      .limit(pageSize)
+      .lean()
+      .exec()
+      .then((productsList) => updateImgUrl(productsList));
 
-    products.forEach((product) => {
-      if (product.imgUrl && product.imgUrl.split('/')[0] === 'images') {
-        // eslint-disable-next-line no-param-reassign
-        product.imgUrl = `${process.env.CDN_ENPOINT}/${product.imgUrl}`;
-      }
-    });
+    // const updatedProducts = updateImgUrl(products);
 
     return {
       products,
@@ -130,7 +129,11 @@ export async function getAllProducts(pageNumber, pageSize) {
 
 export async function getAllProductsOfVendor(userId) {
   try {
-    const products = await Product.find({ userId }).exec(); // Populate the userId field with the user details
+    const products = await Product.find({ userId })
+      .lean()
+      .exec()
+      .then((productsList) => updateImgUrl(productsList)); // Populate the userId field with the user details
+
     return products;
   } catch (error) {
     throw new Error(error);
