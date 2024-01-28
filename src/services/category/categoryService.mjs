@@ -3,6 +3,10 @@
 import Category from '../../models/Category.js';
 
 export async function createCategory(name, description, parentCategory = null) {
+  const categoryByName = await Category.findOne({ name });
+  if (categoryByName) {
+    throw new Error('Category with the same name already exists');
+  }
   const category = new Category({
     name,
     description,
