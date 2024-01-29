@@ -18,14 +18,11 @@ export const createCategory = async (req, res) => {
 
 export const getCategories = async (req, res) => {
   try {
-    const categories = await categoryService.getCategories();
-    if (!categories.length) {
-      res.status(404).json({ error: 'Categories not found' });
-    } else {
-      res.json({ count: categories.length, categories });
-    }
+    const { page, pageSize } = req.query;
+    const categories = await categoryService.getCategories(page, pageSize);
+    res.status(200).json(categories);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: error.message });
   }
 };
 

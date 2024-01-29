@@ -16,8 +16,26 @@ export async function createCategory(name, description, parentCategory = null) {
   return category;
 }
 
-export async function getCategories() {
-  return Category.find();
+export async function getCategories(pageNumber = 1, pageSize = 9) {
+  try {
+    const totalCount = await Category.countDocuments();
+    const totalPages = Math.ceil(totalCount / pageSize);
+    const offset = (pageNumber - 1) * pageSize;
+    const categories = await Category.find()
+      .sort({ createdAt: -1 }) // Sort in descending order (latest first)
+      .skip(offset)
+      .limit(pageSize)
+      .lean()
+      .exec();
+    return {
+      count: totalCount,
+      currentPage: pageNumber,
+      totalPages,
+      categories,
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
 }
 
 export async function getCategoriesExcludeSubcategories() {
