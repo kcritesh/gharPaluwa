@@ -29,6 +29,7 @@ export async function getCategories(pageNumber = 1, pageSize = 9) {
       .exec();
     return {
       count: totalCount,
+      perPage: pageSize,
       currentPage: pageNumber,
       totalPages,
       categories,
@@ -38,8 +39,30 @@ export async function getCategories(pageNumber = 1, pageSize = 9) {
   }
 }
 
-export async function getCategoriesExcludeSubcategories() {
-  return Category.find({ parentCategory: null });
+export async function getCategoriesExcludeSubcategories(
+  pageNumber = 1,
+  pageSize = 9
+) {
+  try {
+    const totalCount = await Category.countDocuments();
+    const totalPages = Math.ceil(totalCount / pageSize);
+    const offset = (pageNumber - 1) * pageSize;
+    const categories = await Category.find({ parentCategory: null })
+      .sort({ createdAt: -1 }) // Sort in descending order (latest first)
+      .skip(offset)
+      .limit(pageSize)
+      .lean()
+      .exec();
+    return {
+      count: totalCount,
+      perPage: pageSize,
+      currentPage: pageNumber,
+      totalPages,
+      categories,
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
 }
 
 export async function getCategoryById(categoryId) {
@@ -89,6 +112,10 @@ export async function deleteCategory(id) {
     throw new Error('Category has subcategories! Please delete them first');
   }
   return Category.findByIdAndDelete(id);
+}
+
+export async function deleteCategories(categoryIds) {
+  return Category.deleteMany({ _id: { $in: categoryIds } });
 }
 
 export async function updateCategory(id, name, description) {

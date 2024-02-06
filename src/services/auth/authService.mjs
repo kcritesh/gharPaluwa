@@ -66,7 +66,11 @@ export async function loginUser(email, password) {
     }
     // jsonWebToken
     const LoggedInUser = { username: user.username, userId: user.id };
-    const accessToken = jwt.sign(LoggedInUser, process.env.ACCESS_TOKEN_SECRET);
+    const accessToken = jwt.sign(
+      LoggedInUser,
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '7d', algorithm: 'HS256' }
+    );
     // Login successful
     return accessToken;
   } catch (error) {
