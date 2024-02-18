@@ -56,10 +56,7 @@ const productSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  keyWords: {
-    type: [String],
-    default: [],
-  },
+
   isDeleted: {
     type: Boolean,
     default: false,
@@ -73,6 +70,14 @@ const productSchema = new mongoose.Schema({
     default: '',
   },
   metaKeywords: {
+    type: String,
+    default: '',
+  },
+  ogImage: {
+    type: String,
+    default: '',
+  },
+  ogUrl: {
     type: String,
     default: '',
   },
@@ -104,6 +109,14 @@ const productSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  reviews: [
+    {
+      user: String,
+      rating: Number,
+      comment: String,
+      date: Date
+    }
+  ]
 });
 
 productSchema.index({ userId: 1 });

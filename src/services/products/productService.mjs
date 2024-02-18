@@ -1,14 +1,19 @@
 import Product from '../../models/Product.js';
-import uploadImage from '../cloudinary/ImageUploadService.mjs';
+import { updateImgUrl } from '../../utils/Image.js';
+// import uploadImage from '../cloudinary/ImageUploadService.mjs';
+
+const primaryProductFields =
+  'name price description quantity imgUrl categoryId';
 
 export async function createProduct(
   name,
   price,
   description,
   quantity,
-  img,
+  mainImg,
   userId,
-  username
+  username,
+  categoryId
 ) {
   try {
     const existingProduct = await Product.findOne({ name });
@@ -16,63 +21,80 @@ export async function createProduct(
       throw new Error('Product with the same name already exists');
     }
 
-    let imgUrl = null; // Initialize imgUrl with null
+    // let imgUrl = null; // Initialize imgUrl with null
 
-    if (img) {
-      imgUrl = await uploadImage(img);
-    }
+    // if (img) {
+    //   imgUrl = await uploadImage(img);
+    // }
+    // const imgUrl = `${process.env.CDN_ENPOINT}`;
 
     const product = new Product({
       name,
       price,
       description,
       quantity,
-      imgUrl,
+      imgUrl: mainImg,
       userId,
       username,
-    });
+      categoryId,
+    }).select(primaryProductFields);
 
     await product.save();
+    const savedProduct = await Product.findById(product.id).select('-reviews');
 
-    return product;
+    savedProduct.imgUrl = `${process.env.CDN_ENPOINT}/${savedProduct.imgUrl}`;
+
+    return savedProduct;
   } catch (error) {
     throw new Error(error);
   }
 }
 
-export async function updateProduct(
+export async function updateProduct({
   id,
   name,
   price,
   description,
   quantity,
-  img,
-  userId
-) {
+  imgUrl,
+  userId,
+  categoryId,
+}) {
   try {
     const product = await Product.findById(id);
     if (!product) {
       throw new Error('Product not found');
     }
+
     if (product.userId.toString() !== userId) {
       throw new Error('You are not authorized to update this product.');
     }
 
-    if (img) {
-      const imgUrl = await uploadImage(img);
-      product.imgUrl = imgUrl;
+    // let imgUrl;
+
+    // if (img) {
+    //   imgUrl = await uploadImage(img);
+    // }
+
+    const updateFields = {
+      ...(imgUrl && { imgUrl }),
+      ...(name && { name }),
+      ...(price && { price }),
+      ...(description && { description }),
+      ...(quantity && { quantity }),
+      ...(categoryId && { categoryId }),
+    };
+
+    const updatedProduct = await Product.findByIdAndUpdate(id, updateFields, {
+      new: true, // Return the updated document
+      runValidators: true, // Run validators for update operations
+    }).select(primaryProductFields);
+
+    if (!updatedProduct) {
+      throw new Error('Failed to update product');
     }
 
-    product.name = name;
-    product.price = price;
-    product.description = description;
-    if (quantity) {
-      product.quantity = quantity;
-    }
-
-    await product.save();
-
-    return product;
+    return updatedProduct;
   } catch (error) {
     throw new Error(error);
   }
@@ -87,7 +109,12 @@ export async function getAllProducts(pageNumber, pageSize) {
     const products = await Product.find()
       .sort({ createdAt: -1 }) // Sort in descending order (latest first)
       .skip(offset)
-      .limit(pageSize);
+      .limit(pageSize)
+      .lean()
+      .exec()
+      .then((productsList) => updateImgUrl(productsList));
+
+    // const updatedProducts = updateImgUrl(products);
 
     return {
       products,
@@ -102,7 +129,11 @@ export async function getAllProducts(pageNumber, pageSize) {
 
 export async function getAllProductsOfVendor(userId) {
   try {
-    const products = await Product.find({ userId }).exec(); // Populate the userId field with the user details
+    const products = await Product.find({ userId })
+      .lean()
+      .exec()
+      .then((productsList) => updateImgUrl(productsList)); // Populate the userId field with the user details
+
     return products;
   } catch (error) {
     throw new Error(error);

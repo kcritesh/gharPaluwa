@@ -12,34 +12,30 @@ export const createCategory = async (req, res) => {
     );
     res.status(201).json({ category });
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: error.message });
   }
 };
 
 export const getCategories = async (req, res) => {
   try {
-    const categories = await categoryService.getCategories();
-    if (!categories.length) {
-      res.status(404).json({ error: 'Categories not found' });
-    } else {
-      res.json({ count: categories.length, categories });
-    }
+    const { page, pageSize } = req.query;
+    const categories = await categoryService.getCategories(page, pageSize);
+    res.status(200).json(categories);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: error.message });
   }
 };
 
 export const getCategoriesExcludeSubcategories = async (req, res) => {
   try {
-    const categories =
-      await categoryService.getCategoriesExcludeSubcategories();
-    if (!categories.length) {
-      res.status(404).json({ error: 'Categories not found' });
-    } else {
-      res.json({ count: categories.length, categories });
-    }
+    const { page, pageSize } = req.query;
+    const categories = await categoryService.getCategoriesExcludeSubcategories(
+      page,
+      pageSize
+    );
+    res.status(200).json(categories);
   } catch (error) {
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -114,9 +110,19 @@ export const deleteCategory = async (req, res) => {
   }
 };
 
+export const deleteCategories = async (req, res) => {
+  try {
+    const {categoriesToDelete} = req.body;
+    await categoryService.deleteCategories(categoriesToDelete);
+    res.json({ message: 'Categories deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 export const updateCategory = async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const { name, description } = req.body;
     const category = await categoryService.updateCategory(
       id,

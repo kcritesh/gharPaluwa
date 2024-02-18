@@ -17,7 +17,7 @@ import { authenticateToken } from '../../middleware/index.js';
 const router = express.Router();
 // Define the routes
 
-router.post('/', authenticateToken, upload.single('img'), createProduct);
+router.post('/', authenticateToken,  upload.single('img'), createProduct);
 router.get('/getallproducts', getAllProducts);
 router.get('/getallproducts/vendor', authenticateToken, getAllProductsOfVendor);
 router.post('/search', getProductsByQuery);
