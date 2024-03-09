@@ -11,16 +11,16 @@ import {
   updateCategory,
 } from '../../controllers/category/categoryController.mjs';
 
-import {authenticateToken} from '../../middleware/auth/authenticatetoken.js';
+import { authenticateToken } from '../../middleware/auth/authenticatetoken.js';
 
 const router = express.Router();
 
 router.get('/listAll', getCategories);
 router.get('/listAll/categoryOnly', getCategoriesExcludeSubcategories);
-router.get('/getById/:id', authenticateToken, getCategoryById);
+router.get('/getById/:id', getCategoryById);
 router.post('/create', authenticateToken, createCategory);
-router.get('/subCategories/:id', authenticateToken, getSubcategories); // get subcategories of a category, id = parentCategory
-router.get('/getByName/:name', authenticateToken, getCategoryByName);
+router.get('/subCategories/:id', getSubcategories); // get subcategories of a category, id = parentCategory
+router.get('/getByName/:name', getCategoryByName);
 router.get(
   '/getSubcategoryByName/:name/:parentCategoryId',
   getSubcategoryByName

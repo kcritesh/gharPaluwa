@@ -5,12 +5,12 @@ import * as categoryService from '../../services/category/categoryService.mjs';
 export const createCategory = async (req, res) => {
   try {
     const { name, description, parentCategory } = req.body;
-    const category = await categoryService.createCategory(
+    const data = await categoryService.createCategory(
       name,
       description,
       parentCategory
     );
-    res.status(201).json({ category });
+    res.status(201).json(data);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -112,13 +112,13 @@ export const deleteCategory = async (req, res) => {
 
 export const deleteCategories = async (req, res) => {
   try {
-    const {categoriesToDelete} = req.body;
+    const { categoriesToDelete } = req.body;
     await categoryService.deleteCategories(categoriesToDelete);
     res.json({ message: 'Categories deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
 export const updateCategory = async (req, res) => {
   try {

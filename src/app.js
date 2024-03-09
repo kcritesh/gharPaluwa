@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("*", (req, res) => {
-  res.status(404).json({ message: "Route not found" });
+  res.status(404).json({ message: "API Route not found" });
 });
 
 const startServer = () => {

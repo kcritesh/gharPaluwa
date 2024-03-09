@@ -13,7 +13,7 @@ export async function createCategory(name, description, parentCategory = null) {
     parentCategory,
   });
   await category.save();
-  return category;
+  return { message: 'Category Created Succesfully', category };
 }
 
 export async function getCategories(pageNumber = 1, pageSize = 9) {
@@ -32,7 +32,7 @@ export async function getCategories(pageNumber = 1, pageSize = 9) {
       perPage: pageSize,
       currentPage: pageNumber,
       totalPages,
-      categories,
+      data: categories,
     };
   } catch (error) {
     throw new Error(error);
@@ -41,11 +41,9 @@ export async function getCategories(pageNumber = 1, pageSize = 9) {
 
 export async function getCategoriesExcludeSubcategories(
   pageNumber = 1,
-  pageSize = 9
+  pageSize = 10
 ) {
   try {
-    const totalCount = await Category.countDocuments();
-    const totalPages = Math.ceil(totalCount / pageSize);
     const offset = (pageNumber - 1) * pageSize;
     const categories = await Category.find({ parentCategory: null })
       .sort({ createdAt: -1 }) // Sort in descending order (latest first)
@@ -53,12 +51,14 @@ export async function getCategoriesExcludeSubcategories(
       .limit(pageSize)
       .lean()
       .exec();
+    const totalCount = await Category.countDocuments({ parentCategory: null });
+    const totalPages = Math.ceil(totalCount / pageSize);
     return {
       count: totalCount,
       perPage: pageSize,
       currentPage: pageNumber,
       totalPages,
-      categories,
+      data: categories,
     };
   } catch (error) {
     throw new Error(error);
@@ -69,8 +69,35 @@ export async function getCategoryById(categoryId) {
   return Category.findById(categoryId);
 }
 
-export async function getSubcategories(parentCategoryId) {
-  return Category.find({ parentCategory: parentCategoryId });
+export async function getSubcategories(
+  parentCategoryId,
+  pageNo = 1,
+  pageSize = 10
+) {
+  try {
+    const offset = (pageNo - 1) * pageSize;
+    const categories = await Category.find({ parentCategory: parentCategoryId })
+      .sort({
+        createdAt: -1, // Sort in descending order (latest first)
+      })
+      .skip(offset) // Skip the first n items
+      .limit(pageSize) // Limit the number of items returned
+      .lean() // Return a plain JavaScript object instead of a mongoose document
+      .exec(); // Execute the query
+    const totalCount = await Category.countDocuments({
+      parentCategory: parentCategoryId,
+    });
+    const totalPages = Math.ceil(totalCount / pageSize);
+    return {
+      count: totalCount,
+      perPage: pageSize,
+      currentPage: pageNo,
+      totalPages,
+      data: categories,
+    };
+  } catch (error) {
+    throw new Error(error);
+  }
 }
 
 export async function getCategoryByName(categoryName) {
